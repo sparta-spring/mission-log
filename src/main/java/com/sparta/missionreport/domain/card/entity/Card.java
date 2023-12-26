@@ -43,7 +43,7 @@ public class Card extends CommonEntity {
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "column_id")
+    @JoinColumn(name = "columns_id")
     private Columns columns;
 
     @OneToMany(mappedBy = "card")
