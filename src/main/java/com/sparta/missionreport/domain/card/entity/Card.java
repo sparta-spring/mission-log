@@ -49,10 +49,10 @@ public class Card extends CommonEntity {
     @OneToMany(mappedBy = "card")
     private List<CardWorker> cardWorkerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "card")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "checklist")
+    @OneToMany(mappedBy = "card")
     private List<Checklist> checklistList = new ArrayList<>();
 
 }

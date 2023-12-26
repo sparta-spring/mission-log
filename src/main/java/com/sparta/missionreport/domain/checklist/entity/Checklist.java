@@ -2,14 +2,7 @@ package com.sparta.missionreport.domain.checklist.entity;
 
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.global.entity.CommonEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -30,7 +23,7 @@ public class Checklist extends CommonEntity {
     @Column
     private Boolean isChecked;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
 }
