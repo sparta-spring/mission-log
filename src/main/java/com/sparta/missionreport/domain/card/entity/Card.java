@@ -43,16 +43,16 @@ public class Card extends CommonEntity {
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "column_id")
+    @JoinColumn(name = "columns_id")
     private Columns columns;
 
     @OneToMany(mappedBy = "card")
     private List<CardWorker> cardWorkerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "card")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "checklist")
+    @OneToMany(mappedBy = "card")
     private List<Checklist> checklistList = new ArrayList<>();
 
 }

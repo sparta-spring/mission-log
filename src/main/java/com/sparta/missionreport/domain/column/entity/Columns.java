@@ -39,7 +39,7 @@ public class Columns extends CommonEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "columns")
     private List<Card> cardList = new ArrayList<>();
 
 }

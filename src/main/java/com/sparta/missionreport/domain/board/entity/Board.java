@@ -42,6 +42,6 @@ public class Board extends CommonEntity {
     @OneToMany(mappedBy = "board")
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "columns")
+    @OneToMany(mappedBy = "board")
     private List<Columns> columnsList = new ArrayList<>();
 }
