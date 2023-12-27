@@ -15,11 +15,17 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Builder
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends CommonEntity {
 
     @Id
@@ -32,7 +38,7 @@ public class User extends CommonEntity {
     @Column(nullable = false, length = 10)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 500)
     private String password;
 
     @OneToMany(mappedBy = "user")
@@ -49,4 +55,5 @@ public class User extends CommonEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
+
 }
