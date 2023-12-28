@@ -33,49 +33,18 @@ public class CardController {
         );
     }
 
-    @PatchMapping("/cards/{card_id}/name")
-    public ResponseEntity<CommonResponseDto> updateName(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                        @PathVariable Long card_id,
-                                                        @RequestBody @Valid CardDto.UpdateRequest updateRequest
-    ) {
-        CardDto.Response response = cardService.updateName(userDetails.getUser(), card_id, updateRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new CommonResponseDto(HttpStatus.OK.value(), "카드 이름 수정 성공", response)
-        );
-    }
 
-    @PatchMapping("/cards/{card_id}/color")
-    public ResponseEntity<CommonResponseDto> updateColor(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         @PathVariable Long card_id,
-                                                         @RequestBody @Valid CardDto.UpdateRequest updateRequest
-    ) {
-        CardDto.Response response = cardService.updateColor(userDetails.getUser(), card_id, updateRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new CommonResponseDto(HttpStatus.OK.value(), "카드 색상 수정 성공", response)
-        );
-    }
-
-    @PatchMapping("/cards/{card_id}/description")
-    public ResponseEntity<CommonResponseDto> updateDescription(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                               @PathVariable Long card_id,
-                                                               @RequestBody @Valid CardDto.UpdateRequest updateRequest
-    ) {
-        CardDto.Response response = cardService.updateDescription(userDetails.getUser(), card_id, updateRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
-        );
-    }
-
-    @PatchMapping("/cards/{card_id}/deadline")
-    public ResponseEntity<CommonResponseDto> updateDeadLine(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    @PatchMapping("/cards/{card_id}")
+    public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @PathVariable Long card_id,
                                                             @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
-        CardDto.Response response = cardService.updateDeadLine(userDetails.getUser(), card_id, updateRequest);
+        CardDto.Response response = cardService.update(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 수정 성공", response)
         );
     }
+
 
     @DeleteMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> deleteCard(@AuthenticationPrincipal UserDetailsImpl userDetails,

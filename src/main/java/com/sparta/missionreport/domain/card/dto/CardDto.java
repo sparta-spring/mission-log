@@ -9,7 +9,6 @@ import com.sparta.missionreport.domain.comment.entity.Comment;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.enums.Color;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
