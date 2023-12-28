@@ -4,24 +4,21 @@ import com.sparta.missionreport.domain.board.entity.Board;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import com.sparta.missionreport.global.enums.Color;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "columns")
 public class Columns extends CommonEntity {
 
@@ -33,7 +30,8 @@ public class Columns extends CommonEntity {
     private String name;
 
     @Column
-    private Color color;
+    @Enumerated(EnumType.STRING)
+    private Color color = Color.NONE;
 
     @Column
     private Long sequence;
@@ -42,7 +40,7 @@ public class Columns extends CommonEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToMany(mappedBy = "columns")
+    @OneToMany(mappedBy = "columns", cascade = CascadeType.PERSIST)
     private List<Card> cardList = new ArrayList<>();
 
 }
