@@ -43,11 +43,11 @@ public class UserDto {
     @Schema(description = "유저 비밀번호 변경 요청 dto")
     public static class UpdatePasswordDto {
 
-        @Schema(description = "유저 기존 비밀번호", defaultValue = "@qqq1111")
+        @Schema(description = "유저 기존 비밀번호", defaultValue = "@qqqq1111")
         private String oldPassword;
 
         @Pattern(regexp = "^[a-zA-Z0-9+-_.]{8,15}$")
-        @Schema(description = "유저 새 비밀번호", defaultValue = "@qqq1112")
+        @Schema(description = "유저 새 비밀번호", defaultValue = "@qqqq1112")
         private String newPassword;
 
     }
