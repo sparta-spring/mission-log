@@ -30,4 +30,14 @@ public class UserDto {
         private String password;
 
     }
+
+    @Getter
+    public static class UpdatePasswordDto {
+
+        private String oldPassword;
+
+        @Pattern(regexp = "^[a-zA-Z0-9+-_.]{8,15}$")
+        private String newPassword;
+
+    }
 }

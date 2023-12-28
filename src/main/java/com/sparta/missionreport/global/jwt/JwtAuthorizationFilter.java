@@ -1,5 +1,6 @@
 package com.sparta.missionreport.global.jwt;
 
+import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.global.jwt.repository.RefreshTokenRepository;
 import com.sparta.missionreport.global.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -44,8 +45,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         } else if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
             Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
             String username = info.getSubject();
+            UserRole role = UserRole.valueOf(
+                    info.get(JwtUtil.AUTHORIZATION_KEY).toString());
             if (refreshTokenRepository.existsByUsername(username)) {
-                String newAccessToken = jwtUtil.createAccessToken(username);
+                String newAccessToken = jwtUtil.createAccessToken(username, role);
                 String currentRefreshToken = JwtUtil.BEARER_PREFIX + refreshToken;
                 jwtUtil.addJwtToHeader(newAccessToken, currentRefreshToken, response);
                 jwtUtil.validateTokenAndThrow(accessToken);

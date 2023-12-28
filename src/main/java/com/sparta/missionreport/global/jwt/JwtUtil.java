@@ -1,7 +1,8 @@
 package com.sparta.missionreport.global.jwt;
 
+import com.sparta.missionreport.domain.user.enums.UserRole;
+import com.sparta.missionreport.domain.user.exception.UserCustomException;
 import com.sparta.missionreport.domain.user.exception.UserExceptionCode;
-import com.sparta.missionreport.global.exception.CustomException;
 import com.sparta.missionreport.global.jwt.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -105,33 +106,35 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public String createAccessToken(String userName) {
+    public String createAccessToken(String email, UserRole role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(userName)
+                        .setSubject(email)
+                        .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
 
-    public String createRefreshToken(String userName) {
+    public String createRefreshToken(String email, UserRole role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(userName)
+                        .setSubject(email)
+                        .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
 
-    public void saveRefreshToken(String userName, String refreshToken) {
+    public void saveRefreshToken(String username, String refreshToken) {
 
-        refreshTokenRepository.saveRefreshToken(userName, refreshToken);
+        refreshTokenRepository.saveRefreshToken(username, refreshToken);
     }
 
     public void addJwtToHeader(String accessToken, String refreshToken,
@@ -153,10 +156,7 @@ public class JwtUtil {
             try {
                 validateTokenAndThrow(accessToken);
             } catch (Exception e) {
-                UserExceptionCode exception = UserExceptionCode.UNAUTHORIZED_TOKEN_INVALID;
-                throw new CustomException(exception.getHttpStatus(),
-                        exception.getErrorCode(),
-                        exception.getMessage());
+                throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_TOKEN_INVALID);
             }
         }
     }

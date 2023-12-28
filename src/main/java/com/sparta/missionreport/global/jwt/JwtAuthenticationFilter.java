@@ -2,6 +2,7 @@ package com.sparta.missionreport.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.missionreport.domain.user.dto.UserDto;
+import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,9 +50,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws IOException {
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        UserRole role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String accessToken = jwtUtil.createAccessToken(username);
-        String refreshToken = jwtUtil.createRefreshToken(username);
+        String accessToken = jwtUtil.createAccessToken(username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username, role);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
