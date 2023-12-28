@@ -9,10 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "card_worker")
+@Getter
 @NoArgsConstructor
 public class CardWorker extends CommonEntity {
 
@@ -27,4 +29,8 @@ public class CardWorker extends CommonEntity {
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
+
+    public String getUserEmail() {
+        return this.user.getEmail();
+    }
 }
