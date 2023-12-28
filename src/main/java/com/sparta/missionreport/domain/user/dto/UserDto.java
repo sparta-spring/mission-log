@@ -22,7 +22,7 @@ public class UserDto {
 
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9+-_.]{8,15}$")
-        @Schema(description = "유저 비밀번호", defaultValue = "@qqq1111")
+        @Schema(description = "유저 비밀번호", defaultValue = "@qqqq1111")
         private String password;
 
     }
@@ -34,7 +34,7 @@ public class UserDto {
         @Schema(description = "유저 이메일", defaultValue = "sparta@gmail.com")
         private String email;
 
-        @Schema(description = "유저 비밀번호", defaultValue = "@qqq1111")
+        @Schema(description = "유저 비밀번호", defaultValue = "@qqqq1111")
         private String password;
 
     }
