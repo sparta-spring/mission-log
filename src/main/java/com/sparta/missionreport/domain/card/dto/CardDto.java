@@ -3,8 +3,9 @@ package com.sparta.missionreport.domain.card.dto;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.checklist.entity.Checklist;
+import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.comment.entity.Comment;
-import com.sparta.missionreport.global.enums.Color;
+import com.sparta.missionreport.domain.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +17,17 @@ import java.util.List;
 public class CardDto {
 
     public static class Request {
-
         @NotBlank
         private String name;
 
+        public Card toEntity(long sequence, Columns columns, User createdBy) {
+            return Card.builder()
+                    .name(name)
+                    .sequence(sequence)
+                    .createdBy(createdBy)
+                    .columns(columns)
+                    .build();
+        }
     }
 
     @Builder
