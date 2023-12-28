@@ -66,19 +66,11 @@ public class Card extends CommonEntity {
     @Builder.Default
     private List<Checklist> checklistList = new ArrayList<>();
 
-    public void updateName(CardDto.UpdateRequest updateRequest) {
-        this.name = updateRequest.getName();
+    public void update(CardDto.UpdateRequest updateRequest) {
+        if (updateRequest.getName() != null) this.name = updateRequest.getName();
+        if (updateRequest.getColor() != null) this.color = updateRequest.getColor();
+        if (updateRequest.getDescription() != null) this.description = updateRequest.getDescription();
+        if (updateRequest.getDeadLine() != null) this.deadLine = updateRequest.getDeadLine();
     }
 
-    public void updateColor(CardDto.UpdateRequest updateRequest) {
-        this.color = updateRequest.getColor();
-    }
-
-    public void updateDescription(CardDto.UpdateRequest updateRequest) {
-        this.description = updateRequest.getDescription();
-    }
-
-    public void updateDeadLine(CardDto.UpdateRequest updateRequest) {
-        this.deadLine = updateRequest.getDeadLine();
-    }
 }
