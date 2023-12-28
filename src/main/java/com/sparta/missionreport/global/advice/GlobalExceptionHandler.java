@@ -1,10 +1,9 @@
 package com.sparta.missionreport.global.advice;
 
 import com.sparta.missionreport.global.common.CommonResponseDto;
-import com.sparta.missionreport.global.enums.GlobalExceptionCode;
 import com.sparta.missionreport.global.exception.CustomException;
+import com.sparta.missionreport.global.exception.GlobalExceptionCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
