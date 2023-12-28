@@ -21,7 +21,7 @@ import java.util.List;
 public class CardDto {
 
     @Getter
-    public static class Request {
+    public static class CreateRequest {
         @NotBlank
         private String name;
 
@@ -36,31 +36,16 @@ public class CardDto {
     }
 
     @Getter
-    public static class NameRequest {
-        @NotBlank
+    public static class UpdateRequest {
         private String name;
-    }
-
-    @Getter
-    public static class ColorRequest {
-        @NotNull
         private Color color;
-    }
-
-    @Getter
-    public static class DescriptionRequest {
-
-        @NotBlank
         private String description;
-    }
 
-    @Getter
-    public static class DeadLineRequest {
-
-        @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
-        @NotNull
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime deadLine;
     }
+
+
 
     @Getter
     @Builder

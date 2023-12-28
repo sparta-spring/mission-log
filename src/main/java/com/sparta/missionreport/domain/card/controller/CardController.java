@@ -1,6 +1,7 @@
 package com.sparta.missionreport.domain.card.controller;
 
 import com.sparta.missionreport.domain.card.dto.CardDto;
+import com.sparta.missionreport.domain.card.dto.CardWorkerRequestDto;
 import com.sparta.missionreport.domain.card.service.CardService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
@@ -24,9 +25,9 @@ public class CardController {
     @PostMapping("/columns/{column_id}/cards")
     public ResponseEntity<CommonResponseDto> createCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long column_id,
-                                                        @RequestBody @Valid CardDto.Request request
+                                                        @RequestBody @Valid CardDto.CreateRequest createRequest
     ) {
-        CardDto.Response response = cardService.createCard(userDetails.getUser(), column_id, request);
+        CardDto.Response response = cardService.createCard(userDetails.getUser(), column_id, createRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CommonResponseDto(HttpStatus.CREATED.value(), "카드 생성 성공", response)
         );
@@ -35,9 +36,9 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/name")
     public ResponseEntity<CommonResponseDto> updateName(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id,
-                                                        @RequestBody @Valid CardDto.NameRequest nameRequest
+                                                        @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
-        CardDto.Response response = cardService.updateName(userDetails.getUser(), card_id, nameRequest);
+        CardDto.Response response = cardService.updateName(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 이름 수정 성공", response)
         );
@@ -46,9 +47,9 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/color")
     public ResponseEntity<CommonResponseDto> updateColor(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                          @PathVariable Long card_id,
-                                                         @RequestBody @Valid CardDto.ColorRequest colorRequest
+                                                         @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
-        CardDto.Response response = cardService.updateColor(userDetails.getUser(), card_id, colorRequest);
+        CardDto.Response response = cardService.updateColor(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 색상 수정 성공", response)
         );
@@ -57,9 +58,9 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/description")
     public ResponseEntity<CommonResponseDto> updateDescription(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                @PathVariable Long card_id,
-                                                               @RequestBody @Valid CardDto.DescriptionRequest descriptionRequest
+                                                               @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
-        CardDto.Response response = cardService.updateDescription(userDetails.getUser(), card_id, descriptionRequest);
+        CardDto.Response response = cardService.updateDescription(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
         );
@@ -68,9 +69,9 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/deadline")
     public ResponseEntity<CommonResponseDto> updateDeadLine(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @PathVariable Long card_id,
-                                                            @RequestBody @Valid CardDto.DeadLineRequest deadLineRequest
+                                                            @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
-        CardDto.Response response = cardService.updateDeadLine(userDetails.getUser(), card_id, deadLineRequest);
+        CardDto.Response response = cardService.updateDeadLine(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
         );
@@ -98,11 +99,22 @@ public class CardController {
 
     @GetMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> getCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                             @PathVariable Long card_id
+                                                     @PathVariable Long card_id
     ) {
         CardDto.Response response = cardService.getCard(userDetails.getUser(), card_id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 조회 성공", response)
+        );
+    }
+
+    @PostMapping("/cards/{card_id}")
+    public ResponseEntity<CommonResponseDto> inviteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @PathVariable Long card_id,
+                                                        @RequestBody @Valid CardWorkerRequestDto requestDto
+    ) {
+        cardService.inviteUser(userDetails.getUser(), card_id, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "사용자 초대 성공", null)
         );
     }
 }
