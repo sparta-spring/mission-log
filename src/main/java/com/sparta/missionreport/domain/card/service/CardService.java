@@ -24,10 +24,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CardService {
 
-    private final ColumnsService columnsService;
     private final UserService userService;
-    private final CardWorkerService cardWorkerService;
     private final BoardService boardService;
+    private final ColumnsService columnsService;
+    private final CardWorkerService cardWorkerService;
     private final CardRepository cardRepository;
 
     @Transactional
@@ -43,51 +43,12 @@ public class CardService {
         return CardDto.Response.of(savedCard);
     }
 
-    @Transactional
-    public CardDto.Response updateName(User user, Long cardId, CardDto.UpdateRequest updateRequest) {
-        Card card = getCardAndCheckAuth(user, cardId);
-
-        if (updateRequest.getName() == null) {
-            throw new CardCustomException(CardExceptionCode.INVALID_REQUEST);
-        }
-
-        card.updateName(updateRequest);
-        return CardDto.Response.of(card);
-    }
 
     @Transactional
-    public CardDto.Response updateColor(User user, Long cardId, CardDto.UpdateRequest updateRequest) {
+    public CardDto.Response update(User user, Long cardId, CardDto.UpdateRequest updateRequest) {
         Card card = getCardAndCheckAuth(user, cardId);
 
-        if (updateRequest.getColor() == null) {
-            throw new CardCustomException(CardExceptionCode.INVALID_REQUEST);
-        }
-
-        card.updateColor(updateRequest);
-        return CardDto.Response.of(card);
-    }
-
-    @Transactional
-    public CardDto.Response updateDescription(User user, Long cardId, CardDto.UpdateRequest updateRequest) {
-        Card card = getCardAndCheckAuth(user, cardId);
-
-        if (updateRequest.getDescription() == null) {
-            throw new CardCustomException(CardExceptionCode.INVALID_REQUEST);
-        }
-
-        card.updateDescription(updateRequest);
-        return CardDto.Response.of(card);
-    }
-
-    @Transactional
-    public CardDto.Response updateDeadLine(User user, Long cardId, CardDto.UpdateRequest updateRequest) {
-        Card card = getCardAndCheckAuth(user, cardId);
-
-        if (updateRequest.getDeadLine() == null) {
-            throw new CardCustomException(CardExceptionCode.INVALID_REQUEST);
-        }
-
-        card.updateDeadLine(updateRequest);
+        card.update(updateRequest);
         return CardDto.Response.of(card);
     }
 
@@ -99,7 +60,7 @@ public class CardService {
 
     public List<CardDto.Response> getCardsByBoard(User user, Long boardId) {
         Board board = boardService.findBoard(boardId);
-        /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성*/
+        /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성 */
 
         List<Card> cards = cardRepository.findAllByColumns_Board_Id(boardId);
         return cards.stream().map(CardDto.Response::of).toList();
@@ -119,7 +80,7 @@ public class CardService {
             throw new CardCustomException(CardExceptionCode.ALREADY_INVITED_USER);
         }
 
-        /* TODO: 해당 요청 유저가 보드에 권한을 가지고 있는지 체크하는 코드*/
+        /* TODO: 해당 요청 유저가 보드에 권한을 가지고 있는지 체크하는 코드 */
         cardWorkerService.saveCardWorker(card, requestUser);
     }
 
