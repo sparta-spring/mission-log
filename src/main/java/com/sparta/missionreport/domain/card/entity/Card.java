@@ -8,15 +8,14 @@ import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import com.sparta.missionreport.global.enums.Color;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "cards")
@@ -55,15 +54,15 @@ public class Card extends CommonEntity {
     @JoinColumn(name = "columns_id")
     private Columns columns;
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<CardWorker> cardWorkerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Checklist> checklistList = new ArrayList<>();
 

@@ -14,8 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +29,6 @@ public class CardDto {
             return Card.builder()
                     .name(name)
                     .sequence(sequence)
-                    .color(Color.NONE)
                     .createdBy(createdBy)
                     .columns(columns)
                     .build();
