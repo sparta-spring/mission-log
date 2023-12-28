@@ -5,6 +5,7 @@ import com.sparta.missionreport.global.exception.CustomException;
 import com.sparta.missionreport.global.exception.GlobalExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +26,15 @@ public class GlobalExceptionHandler {
                 new CommonResponseDto(GlobalExceptionCode.INTERNAL_SERVER_ERROR.getHttpStatus().value(), GlobalExceptionCode.INTERNAL_SERVER_ERROR.getMessage(), null)
         );
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException exception) {
+        log.error("HttpMessageNotReadableException: ", exception);
+        return ResponseEntity.status(GlobalExceptionCode.INVALID_PARAMETER.getHttpStatus()).body(
+                new CommonResponseDto(GlobalExceptionCode.INVALID_PARAMETER.getHttpStatus().value(), GlobalExceptionCode.INVALID_PARAMETER.getMessage(), null)
+        );
+    }
+
 
 
     @ExceptionHandler(IllegalArgumentException.class)
