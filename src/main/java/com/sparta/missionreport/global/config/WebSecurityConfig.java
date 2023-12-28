@@ -10,7 +10,6 @@ import com.sparta.missionreport.global.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -75,17 +74,21 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/api/boards/**").authenticated()
-                        .requestMatchers("/api/cards/**").authenticated()
-                        .requestMatchers("/api/checklists/**").authenticated()
-                        .requestMatchers("/api/columns/**").authenticated()
-                        .requestMatchers("/api/comments/**").authenticated()
-                        .requestMatchers("/api/users/password").authenticated()
-                        .requestMatchers("/api/users/name").authenticated()
-                        .requestMatchers("/api/users/logout").authenticated()
-                        .requestMatchers("/api/users/delete").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/users").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api./users/signup").permitAll()
+                        .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/v3/api-docs").permitAll()
+                        // swagger v2
+                        .requestMatchers("/v2/api-docs",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui.html",
+                                "/webjars/**").permitAll()
+                        // swagger v3
+                        .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**")
+                        .permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
