@@ -32,6 +32,8 @@ public class CardService {
         long sequence = cardRepository.countByColumns_Id(columnId);
         Card savedCard = cardRepository.save(request.toEntity(sequence, columns, createdBy));
 
+        cardWorkerService.saveCardWorker(savedCard, createdBy);
+
         return CardDto.Response.of(savedCard);
     }
 

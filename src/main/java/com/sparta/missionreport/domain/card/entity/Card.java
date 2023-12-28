@@ -37,7 +37,8 @@ public class Card extends CommonEntity {
     private String description;
 
     @Column
-    private Color color;
+    @Enumerated(EnumType.STRING)
+    private Color color = Color.NONE;
 
     @Column
     private Long sequence;
@@ -55,12 +56,15 @@ public class Card extends CommonEntity {
     private Columns columns;
 
     @OneToMany(mappedBy = "card")
+    @Builder.Default
     private List<CardWorker> cardWorkerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "card")
+    @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "card")
+    @Builder.Default
     private List<Checklist> checklistList = new ArrayList<>();
 
     public void updateName(CardDto.NameRequest nameRequest) {

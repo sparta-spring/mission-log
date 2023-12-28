@@ -9,6 +9,7 @@ import com.sparta.missionreport.domain.comment.entity.Comment;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.enums.Color;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,7 +46,7 @@ public class CardDto {
 
     @Getter
     public static class ColorRequest {
-        @NotBlank
+        @NotNull
         private Color color;
     }
 
@@ -60,10 +61,11 @@ public class CardDto {
     public static class DeadLineRequest {
 
         @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
-        @NotBlank
+        @NotNull
         private LocalDateTime deadLine;
     }
 
+    @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
