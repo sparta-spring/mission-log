@@ -51,10 +51,19 @@ public class CardService {
         return CardDto.Response.of(card);
     }
 
+    @Transactional
     public CardDto.Response updateDescription(User user, Long cardId, CardDto.DescriptionRequest descriptionRequest) {
         Card card = getCardAndCheckAuth(user, cardId);
 
         card.updateDescription(descriptionRequest);
+        return CardDto.Response.of(card);
+    }
+
+    @Transactional
+    public CardDto.Response updateDeadLine(User user, Long cardId, CardDto.DeadLineRequest deadLineRequest) {
+        Card card = getCardAndCheckAuth(user, cardId);
+
+        card.updateDeadLine(deadLineRequest);
         return CardDto.Response.of(card);
     }
 

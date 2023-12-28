@@ -1,5 +1,6 @@
 package com.sparta.missionreport.domain.card.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.checklist.entity.Checklist;
@@ -12,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +56,14 @@ public class CardDto {
         private String description;
     }
 
+    @Getter
+    public static class DeadLineRequest {
+
+        @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+        @NotBlank
+        private LocalDateTime deadLine;
+    }
+
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -65,6 +76,7 @@ public class CardDto {
         private String color;
         private Long sequence;
         private String createdBy;
+        private LocalDateTime deadLine;
         private List<String> cardWorkers;
         private List<String> comments;
         private List<String> checkLists;
@@ -80,12 +92,14 @@ public class CardDto {
                     .color(card.getColor().getColor())
                     .sequence(card.getSequence())
                     .createdBy(card.getCreatedBy().getEmail())
+                    .deadLine(card.getDeadLine())
                     .cardWorkers(card.getCardWorkerList().stream().map(CardWorker::getUserEmail).toList())
                     .comments(card.getCommentList().stream().map(Comment::getContent).toList())
                     .checkLists(card.getChecklistList().stream().map(Checklist::getContent).toList())
                     .createdAt(card.getCreatedAt())
                     .build();
         }
+
     }
 
 }

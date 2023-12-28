@@ -7,16 +7,9 @@ import com.sparta.missionreport.domain.comment.entity.Comment;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import com.sparta.missionreport.global.enums.Color;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +42,10 @@ public class Card extends CommonEntity {
     @Column
     private Long sequence;
 
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deadLine;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User createdBy;
@@ -76,5 +73,9 @@ public class Card extends CommonEntity {
 
     public void updateDescription(CardDto.DescriptionRequest descriptionRequest) {
         this.description = descriptionRequest.getDescription();
+    }
+
+    public void updateDeadLine(CardDto.DeadLineRequest deadLineRequest) {
+        this.deadLine = deadLineRequest.getDeadLine();
     }
 }

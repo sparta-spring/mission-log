@@ -60,5 +60,14 @@ public class CardController {
         );
     }
 
+    @PatchMapping("/cards/{card_id}/deadline")
+    public ResponseEntity<CommonResponseDto> updateDeadLine(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                               @PathVariable Long card_id,
+                                                               @RequestBody @Valid CardDto.DeadLineRequest deadLineRequest) {
+        CardDto.Response response = cardService.updateDeadLine(userDetails.getUser(), card_id, deadLineRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
+        );
+    }
 
 }
