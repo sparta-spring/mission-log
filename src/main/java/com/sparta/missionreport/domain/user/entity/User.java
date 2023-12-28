@@ -5,6 +5,7 @@ import com.sparta.missionreport.domain.board.entity.BoardWorker;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.comment.entity.Comment;
+import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,11 +16,19 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
+@Builder
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends CommonEntity {
 
     @Id
@@ -32,8 +41,11 @@ public class User extends CommonEntity {
     @Column(nullable = false, length = 10)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 500)
     private String password;
+
+    @Column(nullable = false)
+    private UserRole role;
 
     @OneToMany(mappedBy = "user")
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
@@ -49,4 +61,5 @@ public class User extends CommonEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
+
 }
