@@ -35,7 +35,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(UserDto.UpdatePasswordDto requestDto, User user) throws Exception {
+    public void updatePassword(UserDto.UpdatePasswordRequestDto requestDto, User user)
+            throws Exception {
 
         if (!passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
             throw new UserCustomException(UserExceptionCode.BAD_REQUEST_NOT_MATCH_PASSWORD);
@@ -44,6 +45,24 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateName(UserDto.UpdateNameRequestDto requestDto, User user)
+            throws Exception {
+
+        user.setName(requestDto.getName());
+
+        userRepository.save(user);
+    }
+
+    public UserDto.GetUserInfoResponseDto getUserInfo(User user)
+            throws Exception {
+
+        return UserDto.GetUserInfoResponseDto.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
 
