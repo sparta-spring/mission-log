@@ -1,5 +1,6 @@
 package com.sparta.missionreport.domain.card.entity;
 
+import com.sparta.missionreport.domain.card.dto.CardDto;
 import com.sparta.missionreport.domain.checklist.entity.Checklist;
 import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.comment.entity.Comment;
@@ -65,4 +66,15 @@ public class Card extends CommonEntity {
     @OneToMany(mappedBy = "card")
     private List<Checklist> checklistList = new ArrayList<>();
 
+    public void updateName(CardDto.NameRequest nameRequest) {
+        this.name = nameRequest.getName();
+    }
+
+    public void updateColor(CardDto.ColorRequest colorRequest) {
+        this.color = colorRequest.getColor();
+    }
+
+    public void updateDescription(CardDto.DescriptionRequest descriptionRequest) {
+        this.description = descriptionRequest.getDescription();
+    }
 }

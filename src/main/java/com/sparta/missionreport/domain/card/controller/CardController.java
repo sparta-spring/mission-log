@@ -29,4 +29,36 @@ public class CardController {
                 new CommonResponseDto(HttpStatus.CREATED.value(), "카드 생성 성공", response)
         );
     }
+
+    @PatchMapping("/cards/{card_id}/name")
+    public ResponseEntity<CommonResponseDto> updateName(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable Long card_id,
+                                                            @RequestBody @Valid CardDto.NameRequest nameRequest) {
+        CardDto.Response response = cardService.updateName(userDetails.getUser(), card_id, nameRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 이름 수정 성공", response)
+        );
+    }
+
+    @PatchMapping("/cards/{card_id}/color")
+    public ResponseEntity<CommonResponseDto> updateColor(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @PathVariable Long card_id,
+                                                        @RequestBody @Valid CardDto.ColorRequest colorRequest) {
+        CardDto.Response response = cardService.updateColor(userDetails.getUser(), card_id, colorRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 색상 수정 성공", response)
+        );
+    }
+
+    @PatchMapping("/cards/{card_id}/description")
+    public ResponseEntity<CommonResponseDto> updateDescription(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                         @PathVariable Long card_id,
+                                                         @RequestBody @Valid CardDto.DescriptionRequest descriptionRequest) {
+        CardDto.Response response = cardService.updateDescription(userDetails.getUser(), card_id, descriptionRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 설명 수정 성공", response)
+        );
+    }
+
+
 }
