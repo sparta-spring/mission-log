@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,13 +40,36 @@ public class UserController {
     @Operation(summary = "유저 비밀번호 변경")
     @PatchMapping("/password")
     public ResponseEntity<CommonResponseDto> updatePassword(
-            @Valid @RequestBody UserDto.UpdatePasswordDto requestDto,
+            @Valid @RequestBody UserDto.UpdatePasswordRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
 
         userService.updatePassword(requestDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "비밀번호 수정 성공", null));
+    }
+
+    @Operation(summary = "유저 이름 변경")
+    @PatchMapping("/name")
+    public ResponseEntity<CommonResponseDto> updateName(
+            @Valid @RequestBody UserDto.UpdateNameRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+
+        userService.updateName(requestDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(HttpStatus.OK.value(), "이름 수정 성공", null));
+    }
+
+    @Operation(summary = "유저 정보 조회")
+    @GetMapping("")
+    public ResponseEntity<CommonResponseDto> getUserInfo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+
+        UserDto.GetUserInfoResponseDto responseDto = userService.getUserInfo(userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(HttpStatus.OK.value(), "유저 정보 조회 성공", responseDto));
     }
 
 }
