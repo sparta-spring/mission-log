@@ -10,9 +10,15 @@ import java.util.Optional;
 @Repository
 public interface ColumnsRepository extends JpaRepository<Columns, Long> {
 
-    Optional<Columns> findByName(String name);
+    Optional<Columns> findTopByBoardIdAndIsDeletedFalseOrderBySequenceDesc(Long boardId);
 
-    Optional<Columns> findTopByBoardIdOrderBySequenceDesc(Long boardId);
+    List<Columns> findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(Long boardId, long l, Long sequence);
 
-    List<Columns> findAllBySequenceBetween(Long sequence, Long sequence1);
+    List<Columns> findAllByBoardIdAndIsDeletedFalseAndSequenceGreaterThan(Long boardId, Long sequence);
+
+    Optional<Columns> findByIdAndIsDeletedFalse(Long columnsId);
+
+    Optional<Columns> findByNameAndIsDeletedFalse(String name);
+
+    Optional<Columns> findByNameAndIsDeletedFalseAndBoardId(String name, Long boardId);
 }

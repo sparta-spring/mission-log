@@ -55,4 +55,13 @@ public class ColumnsController {
                 new CommonResponseDto(HttpStatus.OK.value(), "칼럼 순서 수정 성공",columnsResponseDto));
     }
 
+    @PatchMapping("/columns/{column_id}")
+    public ResponseEntity<CommonResponseDto<ColumnsResponseDto>> deleteColumnSequence(
+            @PathVariable Long column_id)
+    {
+        ColumnsResponseDto columnsResponseDto = columnsService.deleteColumnSequence(column_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "칼럼 삭제 성공",columnsResponseDto));
+    }
+
 }

@@ -9,13 +9,11 @@ import com.sparta.missionreport.domain.column.exception.ColumnsCustomException;
 import com.sparta.missionreport.domain.column.exception.ColumnsExceptionCode;
 import com.sparta.missionreport.domain.column.repository.ColumnsRepository;
 import com.sparta.missionreport.global.enums.Color;
-import com.sparta.missionreport.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +24,8 @@ public class ColumnsService {
 
     public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long boardId) {
         Board board = boardService.findBoard(boardId);
-        validateDuplicateName(requestDto.getName());
-        Columns check = columnsRepository.findTopByBoardIdOrderBySequenceDesc(boardId).orElse(null);
+        validateDuplicateName(requestDto.getName(), boardId);
+        Columns check = columnsRepository.findTopByBoardIdAndIsDeletedFalseOrderBySequenceDesc(boardId).orElse(null);
         Long sequence;
         if(check == null){
             sequence = 1L;
@@ -38,6 +36,7 @@ public class ColumnsService {
         Columns column = Columns.builder()
                 .name(requestDto.getName())
                 .board(board)
+                .isDeleted(false)
                 .color(Color.NONE)
                 .sequence(sequence)
                 .build();
@@ -50,7 +49,7 @@ public class ColumnsService {
                                               Long columnId)
     {
         Columns column = findColumns(columnId);
-        validateDuplicateName(requestDto.getName());
+        validateDuplicateName(requestDto.getName(), column.getBoard().getId());
         column.updateName(requestDto.getName());
         return new ColumnsResponseDto(column);
     }
@@ -68,15 +67,16 @@ public class ColumnsService {
                                                    Long columnId)
     {
         Columns column = findColumns(columnId);
+        Long boardId = column.getBoard().getId();
         if(column.getSequence() < requestDto.getSequence()){
-            List<Columns> columnsList = columnsRepository.findAllBySequenceBetween(column.getSequence() + 1, requestDto.getSequence());
+            List<Columns> columnsList = columnsRepository.findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(boardId, column.getSequence() + 1, requestDto.getSequence());
             for(Columns columns : columnsList){
                 columns.updateSequence("-", 1L);
             }
             column.updateSequence("+", requestDto.getSequence() - column.getSequence());
         }
         else if (column.getSequence() > requestDto.getSequence()){
-            List<Columns> columnsList = columnsRepository.findAllBySequenceBetween(requestDto.getSequence(), column.getSequence() - 1);
+            List<Columns> columnsList = columnsRepository.findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(boardId, requestDto.getSequence(), column.getSequence() - 1);
             for(Columns columns : columnsList){
                 columns.updateSequence("+", 1L);
             }
@@ -89,14 +89,33 @@ public class ColumnsService {
         return new ColumnsResponseDto(column);
     }
 
+    @Transactional
+    public ColumnsResponseDto deleteColumnSequence(Long columnId) {
+        Columns column = findColumns(columnId);
+        Long boardId = column.getBoard().getId();
+        if(!column.getCardList().isEmpty()){
+            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_ALLOW_DELETE_COLUM);
+        }
+        List<Columns> columnsList = columnsRepository.findAllByBoardIdAndIsDeletedFalseAndSequenceGreaterThan(boardId, column.getSequence());
+        for(Columns columns : columnsList){
+            columns.updateSequence("-", 1L);
+        }
+        column.updateDelete();
+        return null;
+    }
+
+
+
+
+
     public Columns findColumns(Long columnsId) {
-        return columnsRepository.findById(columnsId).orElseThrow(
+        return columnsRepository.findByIdAndIsDeletedFalse(columnsId).orElseThrow(
                 () -> new ColumnsCustomException(ColumnsExceptionCode.NOT_FOUND_COLUMNS)
         );
     }
 
-    private void validateDuplicateName(String name){
-        columnsRepository.findByName(name).ifPresent(m -> {
+    private void validateDuplicateName(String name, Long boardId){
+        columnsRepository.findByNameAndIsDeletedFalseAndBoardId(name, boardId).ifPresent(m -> {
             throw new ColumnsCustomException(ColumnsExceptionCode.DUPLICATE_COLUMN_NAME);
         });
     }

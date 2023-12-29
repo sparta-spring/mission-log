@@ -36,6 +36,9 @@ public class Columns extends CommonEntity {
     @Column
     private Long sequence;
 
+    @Column
+    private Boolean isDeleted = false;
+
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
@@ -58,5 +61,9 @@ public class Columns extends CommonEntity {
         else {
             this.sequence -= sequence;
         }
+    }
+
+    public void updateDelete() {
+        this.isDeleted = !this.isDeleted;
     }
 }
