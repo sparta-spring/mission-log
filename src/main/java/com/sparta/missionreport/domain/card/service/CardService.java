@@ -35,7 +35,9 @@ public class CardService {
         Columns columns = columnsService.findColumns(columnId);
         User createdBy = userService.findUserById(user.getId());
 
-        long sequence = cardRepository.countByColumns_Id(columnId);
+        /* TODO: createdBy 가 Board 에 권한을 가진 사람인지 확인하는 코드*/
+
+        long sequence = cardRepository.countByColumns_IdAndIsDeletedIsFalse(columnId) + 1;
         Card savedCard = cardRepository.save(createRequest.toEntity(sequence, columns, createdBy));
 
         cardWorkerService.saveCardWorker(savedCard, createdBy);
@@ -55,14 +57,22 @@ public class CardService {
     @Transactional
     public void deleteCard(User user, Long cardId) {
         Card card = getCardAndCheckAuth(user, cardId);
-        cardRepository.delete(card);
+        card.deleteCard();
+        cardWorkerService.deleteWorkers(card);
+
+        long sequence = card.getSequence();
+        long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(card.getColumns().getId())
+                        .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
+                .getSequence();
+
+        cardRepository.decreaseSequence(card.getColumns().getId(), sequence, last);
     }
 
     public List<CardDto.Response> getCardsByBoard(User user, Long boardId) {
         Board board = boardService.findBoard(boardId);
         /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성 */
 
-        List<Card> cards = cardRepository.findAllByColumns_Board_Id(boardId);
+        List<Card> cards = cardRepository.findAllByColumns_Board_IdAndIsDeletedIsFalse(boardId);
         return cards.stream().map(CardDto.Response::of).toList();
     }
 
@@ -84,7 +94,7 @@ public class CardService {
         cardWorkerService.saveCardWorker(card, requestUser);
     }
 
-    private Card getCardAndCheckAuth(User user, Long cardId) {
+    public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
 
