@@ -1,7 +1,6 @@
 package com.sparta.missionreport.domain.board.entity;
 
 import com.sparta.missionreport.domain.board.dto.BoardDto;
-import com.sparta.missionreport.domain.card.dto.CardDto;
 import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
@@ -58,8 +57,14 @@ public class Board extends CommonEntity {
     private List<Columns> columnsList = new ArrayList<>();
 
     public void update(BoardDto.UpdateRequest updateRequest) {
-        if (updateRequest.getName() != null) this.name = updateRequest.getName();
-        if (updateRequest.getColor() != null) this.color = updateRequest.getColor();
-        if (updateRequest.getDescription() != null) this.description = updateRequest.getDescription();
+        if (updateRequest.getName() != null) {
+            this.name = updateRequest.getName();
+        }
+        if (updateRequest.getColor() != null) {
+            this.color = updateRequest.getColor();
+        }
+        if (updateRequest.getDescription() != null) {
+            this.description = updateRequest.getDescription();
+        }
     }
 }
