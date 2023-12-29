@@ -31,8 +31,7 @@ public class ChecklistController {
     public ResponseEntity<CommonResponseDto> createChecklist(
             @PathVariable Long card_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ChecklistDto.CreateRequest request
-    ) {
+            @RequestBody ChecklistDto.CreateRequest request) {
 
         ChecklistDto.Response response =
                 checklistService.createChecklist(card_id, userDetails.getUser(), request);
@@ -48,8 +47,7 @@ public class ChecklistController {
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ChecklistDto.UpdateRequest request
-    ) {
+            @RequestBody ChecklistDto.UpdateRequest request) {
 
         ChecklistDto.Response response =
                 checklistService.updateContent(card_id, checklist_id, userDetails.getUser(),
@@ -65,8 +63,7 @@ public class ChecklistController {
     public ResponseEntity<CommonResponseDto> updateCheck(
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         ChecklistDto.Response response =
                 checklistService.updateCheck(card_id, checklist_id, userDetails.getUser());
@@ -82,8 +79,7 @@ public class ChecklistController {
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            ChecklistDto.UpdateSequenceRequest request
-    ) {
+            @RequestBody ChecklistDto.UpdateSequenceRequest request) {
 
         ChecklistDto.Response response =
                 checklistService.updateSequence(card_id, checklist_id, userDetails.getUser(),
@@ -99,8 +95,7 @@ public class ChecklistController {
     public ResponseEntity<CommonResponseDto> deleteChecklist(
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         checklistService.deleteChecklist(card_id, checklist_id, userDetails.getUser());
 
@@ -114,8 +109,7 @@ public class ChecklistController {
     public ResponseEntity<CommonResponseDto> getChecklist(
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         ChecklistDto.Response response =
                 checklistService.getChecklist(card_id, checklist_id, userDetails.getUser());
