@@ -117,4 +117,15 @@ public class CardController {
         );
     }
 
+    @Operation(summary = "동일 컬럼 내 카드 이동")
+    @PatchMapping("/cards/{card_id}/sequence")
+    public ResponseEntity<CommonResponseDto> moveCardInSameColumn(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                  @PathVariable Long card_id,
+                                                                  @RequestBody @Valid CardDto.MoveCardRequest request
+    ) {
+        CardDto.CardResponse response = cardService.moveCardInSameColumn(userDetails.getUser(), card_id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 이동 성공", response)
+        );
+    }
 }

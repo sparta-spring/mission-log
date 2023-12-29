@@ -10,6 +10,7 @@ import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.enums.Color;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,6 +57,14 @@ public class CardDto {
         private LocalDateTime deadLine;
     }
 
+    @Getter
+    @Schema(description = "동일 컬럼 내 순서 이동 요청 dto")
+    public static class MoveCardRequest {
+
+        @Schema(description = "카드 순서", example = "3L")
+        @NotNull
+        private Long sequence;
+    }
 
 
     @Getter
