@@ -5,6 +5,8 @@ import com.sparta.missionreport.domain.card.dto.CardWorkerRequestDto;
 import com.sparta.missionreport.domain.card.service.CardService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "Card Controller", description = "Card Controller")
 public class CardController {
 
     private final CardService cardService;
 
-
+    @Operation(summary = "카드 생성")
     @PostMapping("/columns/{column_id}/cards")
     public ResponseEntity<CommonResponseDto> createCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long column_id,
@@ -33,7 +36,7 @@ public class CardController {
         );
     }
 
-
+    @Operation(summary = "카드 수정")
     @PatchMapping("/cards/{card_id}/update")
     public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @PathVariable Long card_id,
@@ -46,6 +49,7 @@ public class CardController {
     }
 
 
+    @Operation(description = "카드 삭제")
     @PatchMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> deleteCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id
@@ -56,6 +60,7 @@ public class CardController {
         );
     }
 
+    @Operation(description = "해당 보드 내의 카드 조회")
     @GetMapping("/boards/{board_id}/cards")
     public ResponseEntity<CommonResponseDto> getCardsByBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable Long board_id
@@ -66,6 +71,7 @@ public class CardController {
         );
     }
 
+    @Operation(description = "카드 단건 조회")
     @GetMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> getCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                      @PathVariable Long card_id
@@ -76,6 +82,7 @@ public class CardController {
         );
     }
 
+    @Operation(description = "해당 카드에 작업자 초대")
     @PostMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> inviteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id,
