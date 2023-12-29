@@ -105,9 +105,13 @@ public class ColumnsService {
     }
 
 
+    public List<ColumnsResponseDto> getColumnList(Long boardId) {
+        return columnsRepository.findAllByBoardIdAndIsDeletedFalseOrderBySequence(boardId).stream().map(ColumnsResponseDto::new).toList();
+    }
 
-
-
+    public ColumnsResponseDto getColumn(Long columnId) {
+        return new ColumnsResponseDto(findColumns(columnId));
+    }
     public Columns findColumns(Long columnsId) {
         return columnsRepository.findByIdAndIsDeletedFalse(columnsId).orElseThrow(
                 () -> new ColumnsCustomException(ColumnsExceptionCode.NOT_FOUND_COLUMNS)
