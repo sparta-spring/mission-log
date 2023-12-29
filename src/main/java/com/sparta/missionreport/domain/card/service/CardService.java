@@ -12,12 +12,10 @@ import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.column.service.ColumnsService;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,8 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public CardDto.Response createCard(User user, Long columnId, CardDto.CreateRequest createRequest) {
+    public CardDto.Response createCard(User user, Long columnId,
+            CardDto.CreateRequest createRequest) {
         Columns columns = columnsService.findColumns(columnId);
         User createdBy = userService.findUserById(user.getId());
 
@@ -84,7 +83,7 @@ public class CardService {
         cardWorkerService.saveCardWorker(card, requestUser);
     }
 
-    private Card getCardAndCheckAuth(User user, Long cardId) {
+    public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
 
