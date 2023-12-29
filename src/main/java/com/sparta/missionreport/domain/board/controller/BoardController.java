@@ -50,7 +50,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
-    @PatchMapping("/boards/{board_id}")
+    @PatchMapping("/boards/{board_id}/color")
     public ResponseEntity<CommonResponseDto> updateColor(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
             @RequestBody @Valid BoardDto.UpdateRequest updateRequest) {
@@ -60,7 +60,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
-    @PatchMapping("/boards/{board_id}")
+    @PatchMapping("/boards/{board_id}/description")
     public ResponseEntity<CommonResponseDto> updateDescription(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
             @RequestBody @Valid BoardDto.UpdateRequest updateRequest) {
