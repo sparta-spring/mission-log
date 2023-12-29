@@ -64,7 +64,7 @@ public class ChecklistDto {
         @Schema(description = "체크 여부", defaultValue = "true")
         private Boolean isChecked;
 
-        @Schema(description = "카드 이름", defaultValue = "true")
+        @Schema(description = "카드 이름", defaultValue = "card name")
         private String cardName;
 
         public static Response of(Checklist checklist) {
