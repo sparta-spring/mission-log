@@ -25,9 +25,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @Table(name = "boards")
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board extends CommonEntity {
