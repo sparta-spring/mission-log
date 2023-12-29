@@ -4,6 +4,7 @@ import com.sparta.missionreport.domain.checklist.dto.ChecklistDto;
 import com.sparta.missionreport.domain.checklist.service.ChecklistService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class ChecklistController {
 
     private final ChecklistService checklistService;
 
+    @Operation(summary = "체크리스트 생성")
     @PostMapping("/cards/{card_id}/checklists")
     public ResponseEntity<CommonResponseDto> createChecklist(
             @PathVariable Long card_id,
@@ -40,6 +42,7 @@ public class ChecklistController {
         );
     }
 
+    @Operation(summary = "체크리스트 내용 변경")
     @PatchMapping("/cards/{card_id}/checklists/{checklist_id}/content")
     public ResponseEntity<CommonResponseDto> updateContent(
             @PathVariable Long card_id,
@@ -57,6 +60,7 @@ public class ChecklistController {
         );
     }
 
+    @Operation(summary = "체크리스트 체크 여부 변경")
     @PatchMapping("/cards/{card_id}/checklists/{checklist_id}/check")
     public ResponseEntity<CommonResponseDto> updateCheck(
             @PathVariable Long card_id,
@@ -72,6 +76,7 @@ public class ChecklistController {
         );
     }
 
+    @Operation(summary = "체크리스트 순서 변경")
     @PatchMapping("/cards/{card_id}/checklists/{checklist_id}/sequence")
     public ResponseEntity<CommonResponseDto> updateSequence(
             @PathVariable Long card_id,
@@ -89,7 +94,8 @@ public class ChecklistController {
         );
     }
 
-    @PatchMapping("/cards/{card_id}/checklists/{checklist_id}")
+    @Operation(summary = "체크리스트 삭제")
+    @PatchMapping("/cards/{card_id}/checklists/{checklist_id}/delete")
     public ResponseEntity<CommonResponseDto> deleteChecklist(
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
@@ -103,6 +109,7 @@ public class ChecklistController {
         );
     }
 
+    @Operation(summary = "체크리스트 전체 조회")
     @GetMapping("/cards/{card_id}/checklists")
     public ResponseEntity<CommonResponseDto> getChecklist(
             @PathVariable Long card_id,

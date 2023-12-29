@@ -60,8 +60,9 @@ public class CardService {
         cardWorkerService.deleteWorkers(card);
 
         long sequence = card.getSequence();
-        long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(card.getColumns().getId())
-                        .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
+        long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
+                        card.getColumns().getId())
+                .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
                 .getSequence();
 
         cardRepository.decreaseSequence(card.getColumns().getId(), sequence, last);
@@ -100,6 +101,7 @@ public class CardService {
         if (!cardWorkerService.isExistedWorker(loginUser, card)) {
             throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_CARD);
         }
+
         return card;
     }
 

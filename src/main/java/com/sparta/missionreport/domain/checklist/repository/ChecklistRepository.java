@@ -12,4 +12,5 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
 
     List<Checklist> findAllByCardIdAndIsDeletedFalseAndSequenceBetween(
             Long cardId, Long oldSequence, Long newSequence);
+
 }

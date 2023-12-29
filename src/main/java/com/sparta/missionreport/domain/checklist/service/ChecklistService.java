@@ -9,7 +9,6 @@ import com.sparta.missionreport.domain.checklist.exception.ChecklistExceptionCod
 import com.sparta.missionreport.domain.checklist.repository.ChecklistRepository;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,16 +59,7 @@ public class ChecklistService {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
-        if (checklist.getSequence() < request.getSequence()) {
-            List<Checklist> updateChecklistList =
-                    checklistRepository.findAllByCardIdAndIsDeletedFalseAndSequenceBetween(
-                            card_id, checklist.getSequence(), request.getSequence());
-        } else if (request.getSequence() < checklist.getSequence()) {
-
-        } else {
-            throw new ChecklistCustomException(
-                    ChecklistExceptionCode.BAD_REQUEST_NOT_CHANGE_CHECKLIST_SEQUENCE);
-        }
+        // ToDo: sequence 변경
 
         return ChecklistDto.Response.of(checklist);
     }
@@ -80,6 +70,8 @@ public class ChecklistService {
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
         checklist.deleteChecklist();
+
+        // ToDo: sequence 땡기기
     }
 
     public ChecklistDto.Response getChecklist(Long card_id, Long checklist_id, User user) {
