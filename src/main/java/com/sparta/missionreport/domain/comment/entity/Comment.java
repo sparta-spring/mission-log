@@ -32,4 +32,7 @@ public class Comment extends CommonEntity {
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
+
+    @Column
+    private boolean isDeleted = false;
 }

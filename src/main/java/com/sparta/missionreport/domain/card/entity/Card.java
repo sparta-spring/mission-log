@@ -37,10 +37,16 @@ public class Card extends CommonEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Color color = Color.NONE;
 
     @Column
     private Long sequence;
+
+    @Column
+    @Builder.Default
+    private boolean isDeleted = false;
+
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -54,15 +60,15 @@ public class Card extends CommonEntity {
     @JoinColumn(name = "columns_id")
     private Columns columns;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<CardWorker> cardWorkerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Checklist> checklistList = new ArrayList<>();
 
@@ -73,4 +79,7 @@ public class Card extends CommonEntity {
         if (updateRequest.getDeadLine() != null) this.deadLine = updateRequest.getDeadLine();
     }
 
+    public void deleteCard() {
+        this.isDeleted = true;
+    }
 }
