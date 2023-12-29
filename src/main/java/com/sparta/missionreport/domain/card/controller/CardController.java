@@ -98,7 +98,9 @@ public class CardController {
     public ResponseEntity<CommonResponseDto> getWorkersInCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable Long card_id
     ) {
-        cardService.getWorkersInCard(userDetails.getUser(), card_id);
-        return null;
+        List<CardWorkerDto.CardWorkerResponse> response = cardService.getWorkersInCard(userDetails.getUser(), card_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 작업자 조회 성공", response)
+        );
     }
 }

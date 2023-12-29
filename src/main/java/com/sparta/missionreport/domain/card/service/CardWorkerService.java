@@ -34,4 +34,8 @@ public class CardWorkerService {
             cardWorker.delete();
         }
     }
+
+    public List<CardWorker> findAllByWorkersInCard(Card card) {
+        return cardWorkerRepository.findAllByCard_IdAndIsDeletedIsFalse(card.getId());
+    }
 }

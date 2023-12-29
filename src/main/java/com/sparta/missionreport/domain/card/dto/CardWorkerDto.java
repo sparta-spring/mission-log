@@ -1,5 +1,6 @@
 package com.sparta.missionreport.domain.card.dto;
 
+import com.sparta.missionreport.domain.card.entity.CardWorker;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,6 +27,7 @@ public class CardWorkerDto {
 
     @Schema(name = "카드 작업자 정보 응답 dto")
     @Builder
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CardWorkerResponse {
@@ -38,6 +40,15 @@ public class CardWorkerDto {
 
         @Schema(description = "사용자 email", example = "sparta@gmail.com")
         private String worker;
+
+
+        public static CardWorkerResponse of(CardWorker cardWorker) {
+            return CardWorkerResponse.builder()
+                    .id(cardWorker.getId())
+                    .cardId(cardWorker.getCard().getId())
+                    .worker(cardWorker.getUserEmail())
+                    .build();
+        }
 
     }
 }

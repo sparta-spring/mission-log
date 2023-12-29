@@ -5,6 +5,7 @@ import com.sparta.missionreport.domain.board.service.BoardService;
 import com.sparta.missionreport.domain.card.dto.CardDto;
 import com.sparta.missionreport.domain.card.dto.CardWorkerDto;
 import com.sparta.missionreport.domain.card.entity.Card;
+import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.card.exception.CardCustomException;
 import com.sparta.missionreport.domain.card.exception.CardExceptionCode;
 import com.sparta.missionreport.domain.card.repository.CardRepository;
@@ -94,6 +95,13 @@ public class CardService {
         cardWorkerService.saveCardWorker(card, requestUser);
     }
 
+    public List<CardWorkerDto.CardWorkerResponse> getWorkersInCard(User user, Long cardId) {
+        Card card = getCardAndCheckAuth(user, cardId);
+
+        List<CardWorker> list = cardWorkerService.findAllByWorkersInCard(card);
+        return list.stream().map(CardWorkerDto.CardWorkerResponse::of).toList();
+    }
+
     public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
@@ -110,9 +118,5 @@ public class CardService {
         return cardRepository.findByIdAndIsDeletedIsFalse(cardId).orElseThrow(
                 () -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND)
         );
-    }
-
-    public void getWorkersInCard(User user, Long cardId) {
-
     }
 }
