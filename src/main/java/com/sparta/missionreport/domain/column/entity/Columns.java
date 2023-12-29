@@ -43,4 +43,7 @@ public class Columns extends CommonEntity {
     @OneToMany(mappedBy = "columns", cascade = CascadeType.PERSIST)
     private List<Card> cardList = new ArrayList<>();
 
+    public void updateName(String name) {
+        this.name = name;
+    }
 }
