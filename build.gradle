@@ -30,6 +30,11 @@ dependencies {
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -44,6 +49,30 @@ dependencies {
     // spring doc
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.3'
 }
+
+// Querydsl 설정부
+def generated = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
+}
+
+// gradle clean 시에 QClass Dir 삭제
+clean {
+    delete file(generated)
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()

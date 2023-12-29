@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CardRepository extends JpaRepository<Card, Long> {
+public interface CardRepository extends JpaRepository<Card, Long>, CardRepositoryCustom {
 
-    Long countByColumns_Id(Long columns_id);
+    Long countByColumns_IdAndIsDeletedIsFalse(Long columns_id);
 
-    List<Card> findAllByColumns_Board_Id(Long board_id);
+    List<Card> findAllByColumns_Board_IdAndIsDeletedIsFalse(Long board_id);
 }
