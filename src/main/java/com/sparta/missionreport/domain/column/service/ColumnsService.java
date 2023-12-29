@@ -25,13 +25,15 @@ public class ColumnsService {
 
     public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnsRequestDto requestDto, Long userId, Long boardId) {
         Board board = boardService.findBoard(boardId);
-        User user = userService.findUser(userId);
+        User user = userService.findUserById(userId);
         validateDuplicateName(requestDto.getName());
         Long sequence = columnsRepository.count() + 1;
         Columns columns = Columns.builder()
                 .name(requestDto.getName())
+                .board(board)
                 .sequence(sequence)
                 .build();
+        columnsRepository.save(columns);
         return new ColumnsResponseDto(columns);
     }
 
