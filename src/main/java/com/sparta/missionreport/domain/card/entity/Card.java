@@ -82,4 +82,8 @@ public class Card extends CommonEntity {
     public void deleteCard() {
         this.isDeleted = true;
     }
+
+    public void updateSequence(Long changeSequence) {
+        this.sequence = changeSequence;
+    }
 }

@@ -16,7 +16,9 @@ public enum CardExceptionCode {
 
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "CARD-004", "유효하지 않는 변경 요청 값 입니다."),
 
-    NOT_FOUND_WORKER_IN_CARD(HttpStatus.NOT_FOUND, "CARD-005", "해당 작업자가 존재하지 않습니다.");
+    NOT_FOUND_WORKER_IN_CARD(HttpStatus.NOT_FOUND, "CARD-005", "해당 작업자가 존재하지 않습니다."),
+
+    INVALID_UPDATE_SEQUENCE(HttpStatus.BAD_REQUEST, "CARD-006", "유효하지 않는 변경 순서 값 입니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;

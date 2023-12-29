@@ -110,6 +110,29 @@ public class CardService {
         return CardWorkerDto.CardWorkerResponse.of(cardWorker);
     }
 
+    @Transactional
+    public CardDto.CardResponse moveCardInSameColumn(User user, Long cardId, CardDto.MoveCardRequest request) {
+        Card card = getCardAndCheckAuth(user, cardId);
+        Columns columns = card.getColumns();
+
+        if (request.getSequence() < 1 || columns.getCardList().size() < request.getSequence()) {
+            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+        }
+
+        Long curSequence = card.getSequence();
+        Long changeSequence = request.getSequence();
+
+        if (changeSequence > curSequence) {
+            cardRepository.decreaseSequence(columns.getId(), curSequence, changeSequence);
+        } else {
+            cardRepository.increaseSequence(columns.getId(), changeSequence, curSequence);
+        }
+
+        card.updateSequence(changeSequence);
+
+        return CardDto.CardResponse.of(card);
+    }
+
     public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
