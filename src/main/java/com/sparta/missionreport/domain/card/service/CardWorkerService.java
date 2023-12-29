@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -16,12 +18,20 @@ public class CardWorkerService {
     private final CardWorkerRepository cardWorkerRepository;
 
     public boolean isExistedWorker(User user, Card card) {
-        return cardWorkerRepository.existsByUser_IdAndCard_Id(user.getId(), card.getId());
+        return cardWorkerRepository.existsByUser_IdAndCard_IdAndIsDeletedIsFalse(user.getId(), card.getId());
     }
 
     @Transactional
     public void saveCardWorker(Card savedCard, User createdBy) {
         CardWorker cardWorker = CardWorker.builder().user(createdBy).card(savedCard).build();
         cardWorkerRepository.save(cardWorker);
+    }
+
+    @Transactional
+    public void deleteWorkers(Card card) {
+        List<CardWorker> list = cardWorkerRepository.findAllByCard_IdAndIsDeletedIsFalse(card.getId());
+        for (CardWorker cardWorker : list) {
+            cardWorker.delete();
+        }
     }
 }

@@ -34,7 +34,7 @@ public class CardController {
     }
 
 
-    @PatchMapping("/cards/{card_id}")
+    @PatchMapping("/cards/{card_id}/update")
     public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @PathVariable Long card_id,
                                                             @RequestBody @Valid CardDto.UpdateRequest updateRequest
@@ -46,7 +46,7 @@ public class CardController {
     }
 
 
-    @DeleteMapping("/cards/{card_id}")
+    @PatchMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> deleteCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id
     ) {
