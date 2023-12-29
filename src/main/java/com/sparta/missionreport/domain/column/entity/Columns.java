@@ -46,4 +46,8 @@ public class Columns extends CommonEntity {
     public void updateName(String name) {
         this.name = name;
     }
+
+    public void updateColor(Color color) {
+        this.color = color;
+    }
 }

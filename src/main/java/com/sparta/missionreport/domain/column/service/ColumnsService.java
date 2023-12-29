@@ -22,16 +22,15 @@ public class ColumnsService {
     private final UserService userService;
     private final BoardService boardService;
 
-    public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long userId, Long boardId) {
+    public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long boardId) {
         Board board = boardService.findBoard(boardId);
-        User user = userService.findUserById(userId);
         validateDuplicateName(requestDto.getName());
         Long sequence = columnsRepository.findTopByBoardIdOrderBySequenceDesc(boardId).orElseThrow(
                () -> new ColumnsCustomException(ColumnsExceptionCode.NOT_FOUND_COLUMNS)).getSequence() + 1;
         Columns column = Columns.builder()
                 .name(requestDto.getName())
                 .board(board)
-                .sequence(sequence)
+                    .sequence(sequence)
                 .build();
         columnsRepository.save(column);
         return new ColumnsResponseDto(column);
@@ -39,13 +38,18 @@ public class ColumnsService {
 
     @Transactional
     public ColumnsResponseDto updateColumName(ColumnsRequestDto.UpdateColumnNameRequestDto requestDto,
-                                              Long userId,
                                               Long columnId)
     {
         Columns column = findColumns(columnId);
-        User user = userService.findUserById(userId);
         validateDuplicateName(requestDto.getName());
         column.updateName(requestDto.getName());
+        return new ColumnsResponseDto(column);
+    }
+
+    @Transactional
+    public ColumnsResponseDto updateColumColor(ColumnsRequestDto.UpdateColumnColorRequestDto requestDto, Long columnId) {
+        Columns column = findColumns(columnId);
+        column.updateColor(requestDto.getColor());
         return new ColumnsResponseDto(column);
     }
 

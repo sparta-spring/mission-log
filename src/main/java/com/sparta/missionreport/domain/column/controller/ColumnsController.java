@@ -20,10 +20,9 @@ public class ColumnsController {
 
     @PostMapping("/boards/{boardId}/columns")
     public ResponseEntity<CommonResponseDto<ColumnsResponseDto>> addColumn(@RequestBody ColumnsRequestDto.AddColumnRequestDto requestDto,
-                                                                           @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                            @PathVariable Long boardId)
     {
-        ColumnsResponseDto columnsResponseDto = columnsService.addColumn(requestDto, userDetails.getUser().getId(), boardId);
+        ColumnsResponseDto columnsResponseDto = columnsService.addColumn(requestDto, boardId);
         return ResponseEntity.status(HttpStatus.CREATED).body(
             new CommonResponseDto(HttpStatus.CREATED.value(), "카드 생성 성공",columnsResponseDto));
     }
@@ -31,12 +30,21 @@ public class ColumnsController {
     @PatchMapping("/columns/{column_id}/name")
     public ResponseEntity<CommonResponseDto<ColumnsResponseDto>> updateColumnName(
             @RequestBody ColumnsRequestDto.UpdateColumnNameRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long column_id)
     {
-        ColumnsResponseDto columnsResponseDto = columnsService.updateColumName(requestDto, userDetails.getUser().getId(), column_id);
+        ColumnsResponseDto columnsResponseDto = columnsService.updateColumName(requestDto, column_id);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CommonResponseDto(HttpStatus.CREATED.value(), "칼럼 이름 수정 성공",columnsResponseDto));
+    }
+
+    @PatchMapping("/columns/{column_id}/color")
+    public ResponseEntity<CommonResponseDto<ColumnsResponseDto>> updateColumnColor(
+            @RequestBody ColumnsRequestDto.UpdateColumnColorRequestDto requestDto,
+            @PathVariable Long column_id)
+    {
+        ColumnsResponseDto columnsResponseDto = columnsService.updateColumColor(requestDto,column_id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CommonResponseDto(HttpStatus.CREATED.value(), "칼럼 색상 수정 성공",columnsResponseDto));
     }
 
 }
