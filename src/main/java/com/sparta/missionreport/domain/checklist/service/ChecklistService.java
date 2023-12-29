@@ -66,29 +66,13 @@ public class ChecklistService {
                     checklistRepository.findAllByCardIdAndIsDeletedFalseAndSequenceBetween(
                             card_id, checklist.getSequence(), request.getSequence());
         } else if (request.getSequence() < checklist.getSequence()) {
-            return ChecklistDto.Response.of(checklist);
-        } else {
-            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_CHANGE_COLUMN_SEQUENCE);
-        }
-
-        if (column.getSequence() < requestDto.getSequence()) {
-            List<Columns> columnsList = columnsRepository.findAllBySequenceAndIsDeleteFalseBetween(
-                    column.getSequence() + 1, requestDto.getSequence());
-            for (Columns columns : columnsList) {
-                columns.updateSequence("-", 1L);
-            }
-            column.updateSequence("+", requestDto.getSequence() - column.getSequence());
-        } else if (column.getSequence() > requestDto.getSequence()) {
-            List<Columns> columnsList = columnsRepository.findAllBySequenceAndIsDeleteFalseBetween(
-                    requestDto.getSequence(), column.getSequence() - 1);
-            for (Columns columns : columnsList) {
-                columns.updateSequence("+", 1L);
-            }
-            column.updateSequence("-", column.getSequence() - requestDto.getSequence());
 
         } else {
-            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_CHANGE_COLUMN_SEQUENCE);
+            throw new ChecklistCustomException(
+                    ChecklistExceptionCode.BAD_REQUEST_NOT_CHANGE_CHECKLIST_SEQUENCE);
         }
+
+        return ChecklistDto.Response.of(checklist);
     }
 
     @Transactional

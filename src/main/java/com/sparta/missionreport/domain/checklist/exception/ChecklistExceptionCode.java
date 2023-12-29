@@ -9,7 +9,10 @@ import org.springframework.http.HttpStatus;
 public enum ChecklistExceptionCode {
 
     // BAD_REQUEST 400
-    BAD_REQUEST_NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "CHECKLIST-00", "잘못된 요청입니다."),
+    //BAD_REQUEST_NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "CHECKLIST-00", "잘못된 요청입니다."),
+
+    BAD_REQUEST_NOT_CHANGE_CHECKLIST_SEQUENCE(HttpStatus.BAD_REQUEST, "CHECKLIST-00",
+            "체크리스트의 순서가 변경되지 않았습니다."),
 
     // UNAUTHORIZED 401
 
