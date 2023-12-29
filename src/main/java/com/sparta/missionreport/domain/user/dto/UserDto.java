@@ -64,7 +64,7 @@ public class UserDto {
 
     @Builder
     @Getter
-    @Schema(description = "유저 정보 조회 반환 dto")
+    @Schema(description = "유저 정보 조회 응답 dto")
     public static class GetUserInfoResponseDto {
 
         @Schema(description = "유저 이메일", defaultValue = "sparta@gmail.com")
