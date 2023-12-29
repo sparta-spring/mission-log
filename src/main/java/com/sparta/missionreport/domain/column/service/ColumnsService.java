@@ -1,6 +1,9 @@
 package com.sparta.missionreport.domain.column.service;
 
 import com.sparta.missionreport.domain.board.entity.Board;
+import com.sparta.missionreport.domain.board.exception.BoardCustomException;
+import com.sparta.missionreport.domain.board.exception.BoardExceptionCode;
+import com.sparta.missionreport.domain.board.repository.BoardRepository;
 import com.sparta.missionreport.domain.board.service.BoardService;
 import com.sparta.missionreport.domain.column.dto.ColumnsRequestDto;
 import com.sparta.missionreport.domain.column.dto.ColumnsResponseDto;
@@ -22,19 +25,21 @@ public class ColumnsService {
     private final ColumnsRepository columnsRepository;
     private final UserService userService;
     private final BoardService boardService;
+    private final BoardRepository boardRepository;
 
-    public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnsRequestDto requestDto, Long userId, Long boardId) {
+    public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long userId, Long boardId) {
         Board board = boardService.findBoard(boardId);
         User user = userService.findUserById(userId);
         validateDuplicateName(requestDto.getName());
-        Long sequence = columnsRepository.count() + 1;
-        Columns columns = Columns.builder()
+        Long sequence = columnsRepository.findTopByBoardIdOrderBySequenceDesc(boardId).orElseThrow(
+               () -> new ColumnsCustomException(ColumnsExceptionCode.NOT_FOUND_COLUMNS)).getSequence() + 1;
+        Columns column = Columns.builder()
                 .name(requestDto.getName())
                 .board(board)
                 .sequence(sequence)
                 .build();
-        columnsRepository.save(columns);
-        return new ColumnsResponseDto(columns);
+        columnsRepository.save(column);
+        return new ColumnsResponseDto(column);
     }
 
 
@@ -50,4 +55,5 @@ public class ColumnsService {
             throw new ColumnsCustomException(ColumnsExceptionCode.DUPLICATE_COLUM_NAME);
         });
     }
+
 }

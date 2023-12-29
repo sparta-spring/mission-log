@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ColumnsRepository extends JpaRepository<Columns, Long> {
 
     Optional<Columns> findByName(String name);
+
+    Optional<Columns> findTopByBoardIdOrderBySequenceDesc(Long boardId);
 }
