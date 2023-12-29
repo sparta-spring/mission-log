@@ -2,9 +2,10 @@ package com.sparta.missionreport.domain.board.service;
 
 import com.sparta.missionreport.domain.board.dto.BoardDto;
 import com.sparta.missionreport.domain.board.dto.BoardDto.Response;
-import com.sparta.missionreport.domain.board.dto.BoardDto.UpdateRequest;
-import com.sparta.missionreport.domain.board.dto.BoardWorkerRequestDto;
+import com.sparta.missionreport.domain.board.dto.BoardDto.UpdateBoardRequest;
+import com.sparta.missionreport.domain.board.dto.BoardWorkerDto;
 import com.sparta.missionreport.domain.board.entity.Board;
+import com.sparta.missionreport.domain.board.entity.BoardWorker;
 import com.sparta.missionreport.domain.board.exception.BoardCustomException;
 import com.sparta.missionreport.domain.board.exception.BoardExceptionCode;
 import com.sparta.missionreport.domain.board.repository.BoardRepository;
@@ -24,48 +25,49 @@ public class BoardService {
     private final BoardWorkerService boardWorkerService;
 
 
-    public Response createBoard(User user, BoardDto.CreateRequest createRequest) {
+    public Response createBoard(User user, BoardDto.CreateBoardRequest createBoardRequest) {
         User createBy = userService.findUserById(user.getId());
-        Board saveBoard = boardRepository.save(createRequest.toEntity(createBy));
+        Board saveBoard = boardRepository.save(createBoardRequest.toEntity(createBy));
         boardWorkerService.saveBoardWorker(saveBoard, createBy);
         return BoardDto.Response.of(saveBoard);
     }
 
     @Transactional
-    public BoardDto.Response updateBoardName(User user, Long boardId, UpdateRequest updateRequest) {
+    public BoardDto.Response updateBoardName(User user, Long boardId, UpdateBoardRequest updateBoardRequest) {
         Board board = getBoardAndCheckAuth(user, boardId);
-        if (updateRequest.getName() == null) {
+        if (updateBoardRequest.getName() == null) {
             throw new BoardCustomException(BoardExceptionCode.INVALID_REQUEST);
         }
-        board.update(updateRequest);
+        board.update(updateBoardRequest);
         return BoardDto.Response.of(board);
     }
 
     @Transactional
     public BoardDto.Response updateBoardColor(User user, Long boardId,
-            BoardDto.UpdateRequest updateRequest) {
+            BoardDto.UpdateBoardRequest updateBoardRequest) {
         Board board = getBoardAndCheckAuth(user, boardId);
-        if (updateRequest.getName() == null) {
+        if (updateBoardRequest.getName() == null) {
             throw new BoardCustomException(BoardExceptionCode.INVALID_REQUEST);
         }
-        board.update(updateRequest);
+        board.update(updateBoardRequest);
         return BoardDto.Response.of(board);
     }
 
     @Transactional
     public BoardDto.Response updateBoardDescription(User user, Long boardId,
-            BoardDto.UpdateRequest updateRequest) {
+            BoardDto.UpdateBoardRequest updateBoardRequest) {
         Board board = getBoardAndCheckAuth(user, boardId);
-        if (updateRequest.getName() == null) {
+        if (updateBoardRequest.getName() == null) {
             throw new BoardCustomException(BoardExceptionCode.INVALID_REQUEST);
         }
-        board.update(updateRequest);
+        board.update(updateBoardRequest);
         return BoardDto.Response.of(board);
     }
 
     public void deleteBoard(User user, Long boardId) {
         Board board = getBoardAndCheckAuth(user, boardId);
-        boardRepository.delete(board);
+        board.deleteBoard();
+        boardWorkerService.deleteBoardWorker(board);
     }
 
     public List<Response> getBoards(User user) {
@@ -79,7 +81,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void inviteNewUser(User user, Long boardId, BoardWorkerRequestDto requestDto) {
+    public void inviteNewUser(User user, Long boardId, BoardWorkerDto.BoardWorkerInviteRequest requestDto) {
         Board board = getBoardAndCheckAuth(user, boardId);
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
         if (boardWorkerService.isExistedWorker(requestUser, board)) {
@@ -87,6 +89,23 @@ public class BoardService {
         }
         boardWorkerService.saveBoardWorker(board, requestUser);
     }
+
+    public List<BoardWorkerDto.BoardWorkerResponse> getWorkersInBoard(User user, Long boardId) {
+        Board board = getBoardAndCheckAuth(user, boardId);
+
+        List<BoardWorker> list = boardWorkerService.findAllByWorkersInBoard(board);
+        return list.stream().map(BoardWorkerDto.BoardWorkerResponse::of).toList();
+    }
+
+    public  BoardWorkerDto.BoardWorkerResponse searchWorkerInBoard(User user, Long boardId, String email) {
+        Board board = getBoardAndCheckAuth(user, boardId);
+        User searcBoardhUser = userService.findUserByEmail(email);
+
+        BoardWorker boardWorker = boardWorkerService.serchBoardUser(board, searcBoardhUser);
+        return BoardWorkerDto.BoardWorkerResponse.of(boardWorker);
+    }
+
+
 
     private Board getBoardAndCheckAuth(User user, Long boardId) {
         Board board = findBoardByID(boardId);
@@ -101,6 +120,5 @@ public class BoardService {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
     }
-
 }
 

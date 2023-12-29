@@ -46,6 +46,10 @@ public class Board extends CommonEntity {
     @Enumerated(EnumType.STRING)
     private Color color = Color.NONE;
 
+    @Column
+    @Builder.Default
+    private boolean isDeleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User createdBy;
@@ -56,15 +60,19 @@ public class Board extends CommonEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
     private List<Columns> columnsList = new ArrayList<>();
 
-    public void update(BoardDto.UpdateRequest updateRequest) {
-        if (updateRequest.getName() != null) {
-            this.name = updateRequest.getName();
+    public void update(BoardDto.UpdateBoardRequest updateBoardRequest) {
+        if (updateBoardRequest.getName() != null) {
+            this.name = updateBoardRequest.getName();
         }
-        if (updateRequest.getColor() != null) {
-            this.color = updateRequest.getColor();
+        if (updateBoardRequest.getColor() != null) {
+            this.color = updateBoardRequest.getColor();
         }
-        if (updateRequest.getDescription() != null) {
-            this.description = updateRequest.getDescription();
+        if (updateBoardRequest.getDescription() != null) {
+            this.description = updateBoardRequest.getDescription();
         }
+    }
+
+    public void deleteBoard() {
+        this.isDeleted = true;
     }
 }

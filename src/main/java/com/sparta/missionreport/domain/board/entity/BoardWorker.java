@@ -2,6 +2,7 @@ package com.sparta.missionreport.domain.board.entity;
 
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,10 @@ public class BoardWorker extends CommonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    @Builder.Default
+    private boolean isDeleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -37,4 +42,9 @@ public class BoardWorker extends CommonEntity {
     public String getUserEmail() {
         return this.user.getEmail();
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
 }
