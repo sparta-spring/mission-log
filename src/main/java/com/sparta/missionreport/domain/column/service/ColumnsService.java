@@ -23,7 +23,7 @@ public class ColumnsService {
     private final BoardService boardService;
 
     public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long boardId) {
-        Board board = boardService.findBoard(boardId);
+        Board board = boardService.findBoardByID(boardId);
         validateDuplicateName(requestDto.getName(), boardId);
         Columns check = columnsRepository.findTopByBoardIdAndIsDeletedFalseOrderBySequenceDesc(boardId).orElse(null);
         Long sequence;
