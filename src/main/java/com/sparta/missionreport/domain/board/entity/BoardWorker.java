@@ -31,10 +31,6 @@ public class BoardWorker extends CommonEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User createdBy;
-
-    @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
 
