@@ -3,7 +3,7 @@ package com.sparta.missionreport.domain.card.service;
 import com.sparta.missionreport.domain.board.entity.Board;
 import com.sparta.missionreport.domain.board.service.BoardService;
 import com.sparta.missionreport.domain.card.dto.CardDto;
-import com.sparta.missionreport.domain.card.dto.CardWorkerRequestDto;
+import com.sparta.missionreport.domain.card.dto.CardWorkerDto;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.exception.CardCustomException;
 import com.sparta.missionreport.domain.card.exception.CardExceptionCode;
@@ -69,7 +69,7 @@ public class CardService {
     }
 
     public List<CardDto.Response> getCardsByBoard(User user, Long boardId) {
-        Board board = boardService.findBoard(boardId);
+        Board board = boardService.findBoardByID(boardId);
         /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성 */
 
         List<Card> cards = cardRepository.findAllByColumns_Board_IdAndIsDeletedIsFalse(boardId);
@@ -82,7 +82,7 @@ public class CardService {
     }
 
     @Transactional
-    public void inviteUser(User user, Long cardId, CardWorkerRequestDto requestDto) {
+    public void inviteUser(User user, Long cardId, CardWorkerDto.CardWorkerInviteRequest requestDto) {
         Card card = getCardAndCheckAuth(user, cardId);
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
 
@@ -107,8 +107,12 @@ public class CardService {
 
 
     public Card findCardById(Long cardId) {
-        return cardRepository.findById(cardId).orElseThrow(
+        return cardRepository.findByIdAndIsDeletedIsFalse(cardId).orElseThrow(
                 () -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND)
         );
+    }
+
+    public void getWorkersInCard(User user, Long cardId) {
+
     }
 }

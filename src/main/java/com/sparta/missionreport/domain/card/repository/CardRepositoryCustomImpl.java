@@ -9,6 +9,7 @@ import static com.sparta.missionreport.domain.card.entity.QCard.card;
 @Repository
 @RequiredArgsConstructor
 public class CardRepositoryCustomImpl implements CardRepositoryCustom {
+
     private final JPAQueryFactory jpaQueryFactory;
 
 
