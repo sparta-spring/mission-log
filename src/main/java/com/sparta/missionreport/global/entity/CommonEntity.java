@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +22,4 @@ public abstract class CommonEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    @Column(nullable = false)
-    private Boolean isDeleted = false;
 }
