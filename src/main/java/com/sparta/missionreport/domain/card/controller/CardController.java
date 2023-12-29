@@ -28,9 +28,9 @@ public class CardController {
     @PostMapping("/columns/{column_id}/cards")
     public ResponseEntity<CommonResponseDto> createCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long column_id,
-                                                        @RequestBody @Valid CardDto.CreateRequest createRequest
+                                                        @RequestBody @Valid CardDto.CreateCardRequest createCardRequest
     ) {
-        CardDto.Response response = cardService.createCard(userDetails.getUser(), column_id, createRequest);
+        CardDto.CardResponse response = cardService.createCard(userDetails.getUser(), column_id, createCardRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CommonResponseDto(HttpStatus.CREATED.value(), "카드 생성 성공", response)
         );
@@ -40,9 +40,9 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/update")
     public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                     @PathVariable Long card_id,
-                                                    @RequestBody @Valid CardDto.UpdateRequest updateRequest
+                                                    @RequestBody @Valid CardDto.UpdateCardRequest updateCardRequest
     ) {
-        CardDto.Response response = cardService.update(userDetails.getUser(), card_id, updateRequest);
+        CardDto.CardResponse response = cardService.update(userDetails.getUser(), card_id, updateCardRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 수정 성공", response)
         );
@@ -65,7 +65,7 @@ public class CardController {
     public ResponseEntity<CommonResponseDto> getCardsByBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable Long board_id
     ) {
-        List<CardDto.Response> responses = cardService.getCardsByBoard(userDetails.getUser(), board_id);
+        List<CardDto.CardResponse> responses = cardService.getCardsByBoard(userDetails.getUser(), board_id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 전체 조회 성공", responses)
         );
@@ -76,7 +76,7 @@ public class CardController {
     public ResponseEntity<CommonResponseDto> getCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                      @PathVariable Long card_id
     ) {
-        CardDto.Response response = cardService.getCard(userDetails.getUser(), card_id);
+        CardDto.CardResponse response = cardService.getCard(userDetails.getUser(), card_id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 조회 성공", response)
         );
