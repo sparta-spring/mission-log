@@ -22,7 +22,7 @@ public class CardDto {
 
     @Getter
     @Schema(description = "카드 생성 요청 dto")
-    public static class CreateRequest {
+    public static class CreateCardRequest {
 
         @NotBlank
         @Schema(description = "카드 이름", example = "개발 전체 진행 완료하자")
@@ -40,7 +40,7 @@ public class CardDto {
 
     @Getter
     @Schema(description = "카드 수정 요청 dto")
-    public static class UpdateRequest {
+    public static class UpdateCardRequest {
 
         @Schema(description = "카드 이름", example = "아니다... 월요일까지 해볼까")
         private String name;
@@ -63,7 +63,7 @@ public class CardDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(description = "카드 정보 반환 dto")
-    public static class Response {
+    public static class CardResponse {
 
         @Schema(description = "카드 id", example = "1L")
         private Long id;
@@ -105,8 +105,8 @@ public class CardDto {
         private LocalDateTime modifiedAt;
 
 
-        public static Response of(Card card) {
-            return Response.builder()
+        public static CardResponse of(Card card) {
+            return CardResponse.builder()
                     .id(card.getId())
                     .columnsId(card.getColumns().getId())
                     .name(card.getName())

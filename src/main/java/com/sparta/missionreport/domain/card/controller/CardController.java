@@ -28,9 +28,9 @@ public class CardController {
     @PostMapping("/columns/{column_id}/cards")
     public ResponseEntity<CommonResponseDto> createCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long column_id,
-                                                        @RequestBody @Valid CardDto.CreateRequest createRequest
+                                                        @RequestBody @Valid CardDto.CreateCardRequest createCardRequest
     ) {
-        CardDto.Response response = cardService.createCard(userDetails.getUser(), column_id, createRequest);
+        CardDto.CardResponse response = cardService.createCard(userDetails.getUser(), column_id, createCardRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CommonResponseDto(HttpStatus.CREATED.value(), "카드 생성 성공", response)
         );
@@ -40,16 +40,16 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/update")
     public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                     @PathVariable Long card_id,
-                                                    @RequestBody @Valid CardDto.UpdateRequest updateRequest
+                                                    @RequestBody @Valid CardDto.UpdateCardRequest updateCardRequest
     ) {
-        CardDto.Response response = cardService.update(userDetails.getUser(), card_id, updateRequest);
+        CardDto.CardResponse response = cardService.update(userDetails.getUser(), card_id, updateCardRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 수정 성공", response)
         );
     }
 
 
-    @Operation(description = "카드 삭제")
+    @Operation(summary = "카드 삭제")
     @PatchMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> deleteCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id
@@ -60,29 +60,29 @@ public class CardController {
         );
     }
 
-    @Operation(description = "해당 보드 내의 카드 조회")
+    @Operation(summary = "해당 보드 내의 카드 조회")
     @GetMapping("/boards/{board_id}/cards")
     public ResponseEntity<CommonResponseDto> getCardsByBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable Long board_id
     ) {
-        List<CardDto.Response> responses = cardService.getCardsByBoard(userDetails.getUser(), board_id);
+        List<CardDto.CardResponse> responses = cardService.getCardsByBoard(userDetails.getUser(), board_id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 전체 조회 성공", responses)
         );
     }
 
-    @Operation(description = "카드 단건 조회")
+    @Operation(summary = "카드 단건 조회")
     @GetMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> getCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                      @PathVariable Long card_id
     ) {
-        CardDto.Response response = cardService.getCard(userDetails.getUser(), card_id);
+        CardDto.CardResponse response = cardService.getCard(userDetails.getUser(), card_id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 조회 성공", response)
         );
     }
 
-    @Operation(description = "해당 카드에 작업자 초대")
+    @Operation(summary = "해당 카드에 작업자 초대")
     @PostMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> inviteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id,
@@ -94,11 +94,27 @@ public class CardController {
         );
     }
 
+    @Operation(summary = "해당 카드의 작업자 리스트 조회")
     @GetMapping("/cards/{card_id}/workers")
     public ResponseEntity<CommonResponseDto> getWorkersInCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable Long card_id
     ) {
-        cardService.getWorkersInCard(userDetails.getUser(), card_id);
-        return null;
+        List<CardWorkerDto.CardWorkerResponse> response = cardService.getWorkersInCard(userDetails.getUser(), card_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 작업자 리스트 조회 성공", response)
+        );
     }
+
+    @Operation(summary = "작업자 검색")
+    @GetMapping("/cards/{card_id}/search/workers")
+    public ResponseEntity<CommonResponseDto> searchWorkerInCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                @PathVariable Long card_id,
+                                                                @RequestParam(name = "email", required = true) String email
+    ) {
+        CardWorkerDto.CardWorkerResponse response = cardService.searchWorkerInCard(userDetails.getUser(), card_id, email);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 작업자 검색 성공", response)
+        );
+    }
+
 }
