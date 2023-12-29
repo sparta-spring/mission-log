@@ -3,7 +3,7 @@ package com.sparta.missionreport.domain.card.service;
 import com.sparta.missionreport.domain.board.entity.Board;
 import com.sparta.missionreport.domain.board.service.BoardService;
 import com.sparta.missionreport.domain.card.dto.CardDto;
-import com.sparta.missionreport.domain.card.dto.CardWorkerRequestDto;
+import com.sparta.missionreport.domain.card.dto.CardWorkerDto;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.exception.CardCustomException;
 import com.sparta.missionreport.domain.card.exception.CardExceptionCode;
@@ -82,7 +82,7 @@ public class CardService {
     }
 
     @Transactional
-    public void inviteUser(User user, Long cardId, CardWorkerRequestDto requestDto) {
+    public void inviteUser(User user, Long cardId, CardWorkerDto.WorkerInviteRequest requestDto) {
         Card card = getCardAndCheckAuth(user, cardId);
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
 
@@ -106,7 +106,7 @@ public class CardService {
 
 
     public Card findCardById(Long cardId) {
-        return cardRepository.findById(cardId).orElseThrow(
+        return cardRepository.findByIdAndIsDeletedIsFalse(cardId).orElseThrow(
                 () -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND)
         );
     }
