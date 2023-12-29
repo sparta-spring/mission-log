@@ -4,11 +4,9 @@ import com.sparta.missionreport.domain.column.dto.ColumnsRequestDto;
 import com.sparta.missionreport.domain.column.dto.ColumnsResponseDto;
 import com.sparta.missionreport.domain.column.service.ColumnsService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
-import com.sparta.missionreport.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,9 +30,9 @@ public class ColumnsController {
             @RequestBody ColumnsRequestDto.UpdateColumnNameRequestDto requestDto,
             @PathVariable Long column_id)
     {
-        ColumnsResponseDto columnsResponseDto = columnsService.updateColumName(requestDto, column_id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CommonResponseDto(HttpStatus.CREATED.value(), "칼럼 이름 수정 성공",columnsResponseDto));
+        ColumnsResponseDto columnsResponseDto = columnsService.updateColumnName(requestDto, column_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "칼럼 이름 수정 성공",columnsResponseDto));
     }
 
     @PatchMapping("/columns/{column_id}/color")
@@ -42,9 +40,19 @@ public class ColumnsController {
             @RequestBody ColumnsRequestDto.UpdateColumnColorRequestDto requestDto,
             @PathVariable Long column_id)
     {
-        ColumnsResponseDto columnsResponseDto = columnsService.updateColumColor(requestDto,column_id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CommonResponseDto(HttpStatus.CREATED.value(), "칼럼 색상 수정 성공",columnsResponseDto));
+        ColumnsResponseDto columnsResponseDto = columnsService.updateColumnColor(requestDto,column_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "칼럼 색상 수정 성공",columnsResponseDto));
+    }
+
+    @PatchMapping("/columns/{column_id}/sequence")
+    public ResponseEntity<CommonResponseDto<ColumnsResponseDto>> updateColumnSequence(
+            @RequestBody ColumnsRequestDto.UpdateColumnSequenceRequestDto requestDto,
+            @PathVariable Long column_id)
+    {
+        ColumnsResponseDto columnsResponseDto = columnsService.updateColumnSequence(requestDto, column_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "칼럼 순서 수정 성공",columnsResponseDto));
     }
 
 }

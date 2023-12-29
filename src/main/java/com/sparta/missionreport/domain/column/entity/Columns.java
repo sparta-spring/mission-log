@@ -50,4 +50,13 @@ public class Columns extends CommonEntity {
     public void updateColor(Color color) {
         this.color = color;
     }
+
+    public void updateSequence(String flag, Long sequence) {
+        if(flag.equals("+")){
+            this.sequence += sequence;
+        }
+        else {
+            this.sequence -= sequence;
+        }
+    }
 }

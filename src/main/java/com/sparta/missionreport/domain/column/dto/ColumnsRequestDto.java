@@ -19,4 +19,9 @@ public class ColumnsRequestDto {
     public static class UpdateColumnColorRequestDto {
         private Color color;
     }
+
+    @Getter
+    public static class UpdateColumnSequenceRequestDto {
+        private Long sequence;
+    }
 }

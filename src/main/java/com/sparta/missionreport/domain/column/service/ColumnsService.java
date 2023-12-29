@@ -8,36 +8,45 @@ import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.column.exception.ColumnsCustomException;
 import com.sparta.missionreport.domain.column.exception.ColumnsExceptionCode;
 import com.sparta.missionreport.domain.column.repository.ColumnsRepository;
-import com.sparta.missionreport.domain.user.entity.User;
-import com.sparta.missionreport.domain.user.service.UserService;
+import com.sparta.missionreport.global.enums.Color;
+import com.sparta.missionreport.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ColumnsService {
 
     private final ColumnsRepository columnsRepository;
-    private final UserService userService;
     private final BoardService boardService;
 
     public ColumnsResponseDto addColumn(ColumnsRequestDto.AddColumnRequestDto requestDto, Long boardId) {
         Board board = boardService.findBoard(boardId);
         validateDuplicateName(requestDto.getName());
-        Long sequence = columnsRepository.findTopByBoardIdOrderBySequenceDesc(boardId).orElseThrow(
-               () -> new ColumnsCustomException(ColumnsExceptionCode.NOT_FOUND_COLUMNS)).getSequence() + 1;
+        Columns check = columnsRepository.findTopByBoardIdOrderBySequenceDesc(boardId).orElse(null);
+        Long sequence;
+        if(check == null){
+            sequence = 1L;
+        }
+        else {
+            sequence = check.getSequence() + 1;
+        }
         Columns column = Columns.builder()
                 .name(requestDto.getName())
                 .board(board)
-                    .sequence(sequence)
+                .color(Color.NONE)
+                .sequence(sequence)
                 .build();
         columnsRepository.save(column);
         return new ColumnsResponseDto(column);
     }
 
     @Transactional
-    public ColumnsResponseDto updateColumName(ColumnsRequestDto.UpdateColumnNameRequestDto requestDto,
+    public ColumnsResponseDto updateColumnName(ColumnsRequestDto.UpdateColumnNameRequestDto requestDto,
                                               Long columnId)
     {
         Columns column = findColumns(columnId);
@@ -47,9 +56,36 @@ public class ColumnsService {
     }
 
     @Transactional
-    public ColumnsResponseDto updateColumColor(ColumnsRequestDto.UpdateColumnColorRequestDto requestDto, Long columnId) {
+    public ColumnsResponseDto updateColumnColor(ColumnsRequestDto.UpdateColumnColorRequestDto requestDto, Long columnId) {
         Columns column = findColumns(columnId);
         column.updateColor(requestDto.getColor());
+        return new ColumnsResponseDto(column);
+    }
+
+
+    @Transactional
+    public ColumnsResponseDto updateColumnSequence(ColumnsRequestDto.UpdateColumnSequenceRequestDto requestDto,
+                                                   Long columnId)
+    {
+        Columns column = findColumns(columnId);
+        if(column.getSequence() < requestDto.getSequence()){
+            List<Columns> columnsList = columnsRepository.findAllBySequenceBetween(column.getSequence() + 1, requestDto.getSequence());
+            for(Columns columns : columnsList){
+                columns.updateSequence("-", 1L);
+            }
+            column.updateSequence("+", requestDto.getSequence() - column.getSequence());
+        }
+        else if (column.getSequence() > requestDto.getSequence()){
+            List<Columns> columnsList = columnsRepository.findAllBySequenceBetween(requestDto.getSequence(), column.getSequence() - 1);
+            for(Columns columns : columnsList){
+                columns.updateSequence("+", 1L);
+            }
+            column.updateSequence("-",  column.getSequence() - requestDto.getSequence());
+
+        }
+        else {
+            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_CHANGE_COLUMN_SEQUENCE);
+        }
         return new ColumnsResponseDto(column);
     }
 
@@ -61,7 +97,7 @@ public class ColumnsService {
 
     private void validateDuplicateName(String name){
         columnsRepository.findByName(name).ifPresent(m -> {
-            throw new ColumnsCustomException(ColumnsExceptionCode.DUPLICATE_COLUM_NAME);
+            throw new ColumnsCustomException(ColumnsExceptionCode.DUPLICATE_COLUMN_NAME);
         });
     }
 }
