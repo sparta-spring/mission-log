@@ -45,7 +45,7 @@ public class Checklist extends CommonEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    public void update(ChecklistDto.UpdateRequest updateRequest) {
+    public void update(ChecklistDto.UpdateChecklistRequest updateRequest) {
         if (updateRequest.getContent() != null) {
             this.content = updateRequest.getContent();
         }

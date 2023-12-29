@@ -31,9 +31,9 @@ public class ChecklistController {
     public ResponseEntity<CommonResponseDto> createChecklist(
             @PathVariable Long card_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ChecklistDto.CreateRequest request) {
+            @RequestBody ChecklistDto.CreateChecklistRequest request) {
 
-        ChecklistDto.Response response =
+        ChecklistDto.ChecklistResponse response =
                 checklistService.createChecklist(card_id, userDetails.getUser(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -47,9 +47,9 @@ public class ChecklistController {
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ChecklistDto.UpdateRequest request) {
+            @RequestBody ChecklistDto.UpdateChecklistRequest request) {
 
-        ChecklistDto.Response response =
+        ChecklistDto.ChecklistResponse response =
                 checklistService.updateContent(card_id, checklist_id, userDetails.getUser(),
                         request);
 
@@ -65,7 +65,7 @@ public class ChecklistController {
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        ChecklistDto.Response response =
+        ChecklistDto.ChecklistResponse response =
                 checklistService.updateCheck(card_id, checklist_id, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -79,9 +79,9 @@ public class ChecklistController {
             @PathVariable Long card_id,
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ChecklistDto.UpdateSequenceRequest request) {
+            @RequestBody ChecklistDto.UpdateChecklistSequenceRequest request) {
 
-        ChecklistDto.Response response =
+        ChecklistDto.ChecklistResponse response =
                 checklistService.updateSequence(card_id, checklist_id, userDetails.getUser(),
                         request);
 
@@ -111,7 +111,7 @@ public class ChecklistController {
             @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        ChecklistDto.Response response =
+        ChecklistDto.ChecklistResponse response =
                 checklistService.getChecklist(card_id, checklist_id, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(

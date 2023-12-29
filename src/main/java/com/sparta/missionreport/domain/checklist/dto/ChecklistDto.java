@@ -14,7 +14,7 @@ public class ChecklistDto {
 
     @Getter
     @Schema(description = "체크리스트 생성 요청 dto")
-    public static class CreateRequest {
+    public static class CreateChecklistRequest {
 
         @NotBlank
         @Schema(description = "체크리스트 내용", defaultValue = "checklist content")
@@ -31,7 +31,7 @@ public class ChecklistDto {
 
     @Getter
     @Schema(description = "체크리스트 변경 요청 dto (순서 제외)")
-    public static class UpdateRequest {
+    public static class UpdateChecklistRequest {
 
         @Schema(description = "체크리스트 내용", defaultValue = "checklist content")
         private String content;
@@ -40,7 +40,7 @@ public class ChecklistDto {
 
     @Getter
     @Schema(description = "체크리스트 순서 변경 요청 dto")
-    public static class UpdateSequenceRequest {
+    public static class UpdateChecklistSequenceRequest {
 
         @NotBlank
         @Schema(description = "체크리스트 순서", defaultValue = "1")
@@ -53,7 +53,7 @@ public class ChecklistDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(description = "체크리스트 응답 dto")
-    public static class Response {
+    public static class ChecklistResponse {
 
         @Schema(description = "체크리스트 내용", defaultValue = "checklist content")
         private String content;
@@ -67,8 +67,8 @@ public class ChecklistDto {
         @Schema(description = "카드 이름", defaultValue = "card name")
         private String cardName;
 
-        public static Response of(Checklist checklist) {
-            return Response.builder()
+        public static ChecklistResponse of(Checklist checklist) {
+            return ChecklistResponse.builder()
                     .content(checklist.getContent())
                     .sequence(checklist.getSequence())
                     .isChecked(checklist.getIsChecked())

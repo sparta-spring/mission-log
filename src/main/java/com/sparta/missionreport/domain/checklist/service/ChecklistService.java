@@ -23,45 +23,46 @@ public class ChecklistService {
     private final ChecklistRepository checklistRepository;
 
     @Transactional
-    public ChecklistDto.Response createChecklist(Long card_id, User user,
-            ChecklistDto.CreateRequest request) {
+    public ChecklistDto.ChecklistResponse createChecklist(Long card_id, User user,
+            ChecklistDto.CreateChecklistRequest request) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Long sequence = checklistRepository.countByCardIdAndIsDeletedFalse(card_id);
         Checklist checklist = checklistRepository.save(request.toEntity(sequence + 1, card));
 
-        return ChecklistDto.Response.of(checklist);
+        return ChecklistDto.ChecklistResponse.of(checklist);
     }
 
     @Transactional
-    public ChecklistDto.Response updateContent(
-            Long card_id, Long checklist_id, User user, ChecklistDto.UpdateRequest request) {
+    public ChecklistDto.ChecklistResponse updateContent(
+            Long card_id, Long checklist_id, User user,
+            ChecklistDto.UpdateChecklistRequest request) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
         checklist.update(request);
-        return ChecklistDto.Response.of(checklist);
+        return ChecklistDto.ChecklistResponse.of(checklist);
     }
 
     @Transactional
-    public ChecklistDto.Response updateCheck(
+    public ChecklistDto.ChecklistResponse updateCheck(
             Long card_id, Long checklist_id, User user) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
         checklist.updateIsChecked();
-        return ChecklistDto.Response.of(checklist);
+        return ChecklistDto.ChecklistResponse.of(checklist);
     }
 
     @Transactional
-    public ChecklistDto.Response updateSequence(
+    public ChecklistDto.ChecklistResponse updateSequence(
             Long card_id, Long checklist_id, User user,
-            ChecklistDto.UpdateSequenceRequest request) {
+            ChecklistDto.UpdateChecklistSequenceRequest request) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
         // ToDo: sequence 변경
 
-        return ChecklistDto.Response.of(checklist);
+        return ChecklistDto.ChecklistResponse.of(checklist);
     }
 
     @Transactional
@@ -74,11 +75,11 @@ public class ChecklistService {
         // ToDo: sequence 땡기기
     }
 
-    public ChecklistDto.Response getChecklist(Long card_id, Long checklist_id, User user) {
+    public ChecklistDto.ChecklistResponse getChecklist(Long card_id, Long checklist_id, User user) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
-        return ChecklistDto.Response.of(checklist);
+        return ChecklistDto.ChecklistResponse.of(checklist);
     }
 
     public Checklist getChecklistAndCheckAuth(User user, Long checklistId) {
