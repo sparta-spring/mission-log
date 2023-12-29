@@ -69,7 +69,7 @@ public class CardService {
     }
 
     public List<CardDto.Response> getCardsByBoard(User user, Long boardId) {
-        Board board = boardService.findBoard(boardId);
+        Board board = boardService.findBoardByID(boardId);
         /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성 */
 
         List<Card> cards = cardRepository.findAllByColumns_Board_IdAndIsDeletedIsFalse(boardId);
@@ -82,7 +82,7 @@ public class CardService {
     }
 
     @Transactional
-    public void inviteUser(User user, Long cardId, CardWorkerDto.WorkerInviteRequest requestDto) {
+    public void inviteUser(User user, Long cardId, CardWorkerDto.CardWorkerInviteRequest requestDto) {
         Card card = getCardAndCheckAuth(user, cardId);
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
 
@@ -110,5 +110,9 @@ public class CardService {
         return cardRepository.findByIdAndIsDeletedIsFalse(cardId).orElseThrow(
                 () -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND)
         );
+    }
+
+    public void getWorkersInCard(User user, Long cardId) {
+
     }
 }

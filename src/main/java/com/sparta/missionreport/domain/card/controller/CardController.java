@@ -1,7 +1,7 @@
 package com.sparta.missionreport.domain.card.controller;
 
 import com.sparta.missionreport.domain.card.dto.CardDto;
-import com.sparta.missionreport.domain.card.dto.CardWorkerRequestDto;
+import com.sparta.missionreport.domain.card.dto.CardWorkerDto;
 import com.sparta.missionreport.domain.card.service.CardService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
@@ -39,8 +39,8 @@ public class CardController {
     @Operation(summary = "카드 수정")
     @PatchMapping("/cards/{card_id}/update")
     public ResponseEntity<CommonResponseDto> update(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long card_id,
-                                                            @RequestBody @Valid CardDto.UpdateRequest updateRequest
+                                                    @PathVariable Long card_id,
+                                                    @RequestBody @Valid CardDto.UpdateRequest updateRequest
     ) {
         CardDto.Response response = cardService.update(userDetails.getUser(), card_id, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -86,11 +86,19 @@ public class CardController {
     @PostMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> inviteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id,
-                                                        @RequestBody @Valid CardWorkerRequestDto requestDto
+                                                        @RequestBody @Valid CardWorkerDto.CardWorkerInviteRequest requestDto
     ) {
         cardService.inviteUser(userDetails.getUser(), card_id, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "사용자 초대 성공", null)
         );
+    }
+
+    @GetMapping("/cards/{card_id}/workers")
+    public ResponseEntity<CommonResponseDto> getWorkersInCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                              @PathVariable Long card_id
+    ) {
+        cardService.getWorkersInCard(userDetails.getUser(), card_id);
+        return null;
     }
 }
