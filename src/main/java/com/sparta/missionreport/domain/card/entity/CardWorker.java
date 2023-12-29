@@ -2,13 +2,7 @@ package com.sparta.missionreport.domain.card.entity;
 
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +28,14 @@ public class CardWorker extends CommonEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
+    @Column
+    private boolean isDeleted = false;
+
     public String getUserEmail() {
         return this.user.getEmail();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
