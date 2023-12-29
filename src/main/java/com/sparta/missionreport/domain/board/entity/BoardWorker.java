@@ -9,11 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "board_worker")
+@Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class BoardWorker extends CommonEntity {
 
     @Id
@@ -25,6 +31,14 @@ public class BoardWorker extends CommonEntity {
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User createdBy;
+
+    @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public String getUserEmail() {
+        return this.user.getEmail();
+    }
 }
