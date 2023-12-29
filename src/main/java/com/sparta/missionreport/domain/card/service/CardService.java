@@ -102,6 +102,14 @@ public class CardService {
         return list.stream().map(CardWorkerDto.CardWorkerResponse::of).toList();
     }
 
+    public CardWorkerDto.CardWorkerResponse searchWorkerInCard(User user, Long cardId, String email) {
+        Card card = getCardAndCheckAuth(user, cardId);
+        User searchUser = userService.findUserByEmail(email);
+
+        CardWorker cardWorker = cardWorkerService.searchUser(card, searchUser);
+        return CardWorkerDto.CardWorkerResponse.of(cardWorker);
+    }
+
     public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
