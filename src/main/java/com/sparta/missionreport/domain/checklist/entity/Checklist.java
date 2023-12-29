@@ -55,7 +55,7 @@ public class Checklist extends CommonEntity {
         this.isChecked = !this.isChecked;
     }
 
-    public void updateIsDeleted() {
-        this.isDeleted = !this.isDeleted;
+    public void deleteChecklist() {
+        this.isDeleted = true;
     }
 }

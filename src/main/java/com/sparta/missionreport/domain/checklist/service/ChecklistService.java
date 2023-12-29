@@ -26,7 +26,6 @@ public class ChecklistService {
     @Transactional
     public ChecklistDto.Response createChecklist(Long card_id, User user,
             ChecklistDto.CreateRequest request) {
-        User createdBy = userService.findUserById(user.getId());
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Long sequence = checklistRepository.countByCardIdAndIsDeletedFalse(card_id);
         Checklist checklist = checklistRepository.save(request.toEntity(sequence + 1, card));
@@ -77,11 +76,17 @@ public class ChecklistService {
 
     @Transactional
     public void deleteChecklist(Long card_id, Long checklist_id, User user) {
+        Card card = cardService.getCardAndCheckAuth(user, card_id);
+        Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
+        checklist.deleteChecklist();
     }
 
     public ChecklistDto.Response getChecklist(Long card_id, Long checklist_id, User user) {
+        Card card = cardService.getCardAndCheckAuth(user, card_id);
+        Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
+        return ChecklistDto.Response.of(checklist);
     }
 
     public Checklist getChecklistAndCheckAuth(User user, Long checklistId) {
