@@ -12,14 +12,25 @@ public class CardRepositoryCustomImpl implements CardRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-
     @Override
     public void decreaseSequence(Long column_id, Long start, Long end) {
         jpaQueryFactory.update(card)
                 .where(card.columns.id.eq(column_id)
+                        .and(card.isDeleted.isFalse())
                         .and(card.sequence.between(start + 1, end))
                 )
                 .set(card.sequence, card.sequence.subtract(1))
+                .execute();
+    }
+
+    @Override
+    public void increaseSequence(Long column_id, Long start, Long end) {
+        jpaQueryFactory.update(card)
+                .where(card.columns.id.eq(column_id)
+                        .and(card.isDeleted.isFalse())
+                        .and(card.sequence.between(start, end - 1))
+                )
+                .set(card.sequence, card.sequence.add(1))
                 .execute();
     }
 }
