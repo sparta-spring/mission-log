@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class BoardDto {
 
     @Getter
-    public static class CreateRequest {
+    public static class CreateBoardRequest {
 
         @NotBlank
         private String name;
@@ -27,7 +27,7 @@ public class BoardDto {
     }
 
     @Getter
-    public static class UpdateRequest {
+    public static class UpdateBoardRequest {
 
         private String name;
         private Color color;

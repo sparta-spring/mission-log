@@ -49,6 +49,5 @@ public class CardWorkerDto {
                     .worker(cardWorker.getUserEmail())
                     .build();
         }
-
     }
 }
