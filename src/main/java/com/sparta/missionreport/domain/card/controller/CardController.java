@@ -71,6 +71,17 @@ public class CardController {
         );
     }
 
+    @Operation(summary = "해당 컬럼 내의 카드 조회")
+    @GetMapping("/columns/{columns_id}/cards")
+    public ResponseEntity<CommonResponseDto> getCardsByColumn(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                             @PathVariable Long columns_id
+    ) {
+        List<CardDto.CardResponse> responses = cardService.getCardsByColumn(userDetails.getUser(), columns_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "컬럼 내의 카드 전체 조회 성공", responses)
+        );
+    }
+
     @Operation(summary = "카드 단건 조회")
     @GetMapping("/cards/{card_id}")
     public ResponseEntity<CommonResponseDto> getCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -121,9 +132,21 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/sequence")
     public ResponseEntity<CommonResponseDto> moveCardInSameColumn(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                   @PathVariable Long card_id,
-                                                                  @RequestBody @Valid CardDto.MoveCardRequest request
+                                                                  @RequestBody @Valid CardDto.MoveCardInSameColRequest request
     ) {
         CardDto.CardResponse response = cardService.moveCardInSameColumn(userDetails.getUser(), card_id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "카드 이동 성공", response)
+        );
+    }
+
+    @Operation(summary = "다른 컬럼으로 이동")
+    @PatchMapping("/cards/{card_id}/columns/sequence")
+    public ResponseEntity<CommonResponseDto> moveCard(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                      @PathVariable Long card_id,
+                                                      @RequestBody @Valid CardDto.MoveCardRequest request
+    ) {
+        CardDto.CardResponse response = cardService.moveCard(userDetails.getUser(), card_id, request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "카드 이동 성공", response)
         );

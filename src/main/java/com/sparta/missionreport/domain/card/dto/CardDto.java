@@ -59,12 +59,26 @@ public class CardDto {
 
     @Getter
     @Schema(description = "동일 컬럼 내 순서 이동 요청 dto")
-    public static class MoveCardRequest {
+    public static class MoveCardInSameColRequest {
 
         @Schema(description = "카드 순서", example = "3L")
         @NotNull
         private Long sequence;
     }
+
+    @Getter
+    @Schema(description = "다른 컬럼으로 이동 요청 dto")
+    public static class MoveCardRequest {
+
+        @Schema(description = "이동할 컬럼 id", example = "2L")
+        @NotNull
+        private Long column_id;
+
+        @Schema(description = "카드 순서", example = "3L")
+        @NotNull
+        private Long sequence;
+    }
+
 
 
     @Getter
