@@ -31,14 +31,14 @@ public class QComment extends EntityPathBase<Comment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final com.sparta.missionreport.domain.user.entity.QUser createdBy;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
-
-    public final com.sparta.missionreport.domain.user.entity.QUser user;
 
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
@@ -59,7 +59,7 @@ public class QComment extends EntityPathBase<Comment> {
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.card = inits.isInitialized("card") ? new com.sparta.missionreport.domain.card.entity.QCard(forProperty("card"), inits.get("card")) : null;
-        this.user = inits.isInitialized("user") ? new com.sparta.missionreport.domain.user.entity.QUser(forProperty("user")) : null;
+        this.createdBy = inits.isInitialized("createdBy") ? new com.sparta.missionreport.domain.user.entity.QUser(forProperty("createdBy")) : null;
     }
 
 }

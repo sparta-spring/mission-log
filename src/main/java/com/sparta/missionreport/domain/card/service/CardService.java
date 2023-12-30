@@ -114,7 +114,7 @@ public class CardService {
         }
 
         if (!boardWorkerService.isExistedWorker(requestUser, card.getColumns().getBoard())) {
-            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+            throw new CardCustomException(CardExceptionCode.NO_INVITED_REQUEST_USER);
         }
         cardWorkerService.saveCardWorker(card, requestUser);
     }
