@@ -48,7 +48,8 @@ public class User extends CommonEntity {
     private UserRole role;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "user")
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
