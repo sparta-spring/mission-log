@@ -94,7 +94,7 @@ public class CardController {
     }
 
     @Operation(summary = "해당 카드에 작업자 초대")
-    @PostMapping("/cards/{card_id}")
+    @PostMapping("/cards/{card_id}/workers")
     public ResponseEntity<CommonResponseDto> inviteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                         @PathVariable Long card_id,
                                                         @RequestBody @Valid CardWorkerDto.CardWorkerInviteRequest requestDto
@@ -102,6 +102,17 @@ public class CardController {
         cardService.inviteUser(userDetails.getUser(), card_id, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "사용자 초대 성공", null)
+        );
+    }
+
+    @Operation(summary = "해당 카드에 작업자 삭제")
+    @PatchMapping("/cards/{card_id}/workers")
+    public ResponseEntity<CommonResponseDto> deleteWorker(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @PathVariable Long card_id
+    ) {
+        cardService.deleteWorker(userDetails.getUser(), card_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "작업자 삭제 성공", null)
         );
     }
 

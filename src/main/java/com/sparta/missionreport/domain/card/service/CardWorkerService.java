@@ -47,4 +47,13 @@ public class CardWorkerService {
                 () -> new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD)
         );
     }
+
+    @Transactional
+    public void deleteWorker(Card card, User worker) {
+        CardWorker cardWorker = cardWorkerRepository.findCardWorkerByCard_IdAndUser_Id(card.getId(), worker.getId()).orElseThrow(
+                () -> new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD)
+        );
+
+        cardWorker.delete();
+    }
 }

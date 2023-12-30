@@ -189,6 +189,18 @@ public class CardService {
         return CardDto.CardResponse.of(card);
     }
 
+    @Transactional
+    public void deleteWorker(User user, Long cardId) {
+        Card card = getCardAndCheckAuth(user, cardId);
+        User worker = userService.findUserById(user.getId());
+
+        if (!cardWorkerService.isExistedWorker(worker, card)) {
+            throw new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD);
+        }
+
+        cardWorkerService.deleteWorker(card, worker);
+    }
+
     public Card getCardAndCheckAuth(User user, Long cardId) {
         Card card = findCardById(cardId);
         User loginUser = userService.findUserById(user.getId());
