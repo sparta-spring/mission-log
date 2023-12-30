@@ -2,6 +2,7 @@ package com.sparta.missionreport.domain.card.service;
 
 import com.sparta.missionreport.domain.board.entity.Board;
 import com.sparta.missionreport.domain.board.service.BoardService;
+import com.sparta.missionreport.domain.board.service.BoardWorkerService;
 import com.sparta.missionreport.domain.card.dto.CardDto;
 import com.sparta.missionreport.domain.card.dto.CardWorkerDto;
 import com.sparta.missionreport.domain.card.entity.Card;
@@ -14,6 +15,8 @@ import com.sparta.missionreport.domain.column.service.ColumnsService;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ public class CardService {
     private final BoardService boardService;
     private final ColumnsService columnsService;
     private final CardWorkerService cardWorkerService;
+    private final BoardWorkerService boardWorkerService;
     private final CardRepository cardRepository;
 
     @Transactional
@@ -35,7 +39,9 @@ public class CardService {
         Columns columns = columnsService.findColumns(columnId);
         User createdBy = userService.findUserById(user.getId());
 
-        /* TODO: createdBy 가 Board 에 권한을 가진 사람인지 확인하는 코드*/
+        if (!boardWorkerService.isExistedWorker(createdBy, columns.getBoard())) {
+            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+        }
 
         long sequence = cardRepository.countByColumns_IdAndIsDeletedIsFalse(columnId) + 1;
         Card savedCard = cardRepository.save(createCardRequest.toEntity(sequence, columns, createdBy));
@@ -71,10 +77,26 @@ public class CardService {
 
     public List<CardDto.CardResponse> getCardsByBoard(User user, Long boardId) {
         Board board = boardService.findBoardByID(boardId);
-        /* TODO: 로그인 유저가 해당 보드 작업자 여부 확인 코드 작성 */
+        User loginUser = userService.findUserById(user.getId());
+        if (!boardWorkerService.isExistedWorker(loginUser, board)) {
+            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+        }
 
         List<Card> cards = cardRepository.findAllByColumns_Board_IdAndIsDeletedIsFalse(boardId);
         return cards.stream().map(CardDto.CardResponse::of).toList();
+    }
+
+    public List<CardDto.CardResponse> getCardsByColumn(User user, Long columnsId) {
+        Columns columns = columnsService.findColumns(columnsId);
+        User loginUser = userService.findUserById(user.getId());
+        Board board = columns.getBoard();
+
+        if (boardWorkerService.isExistedWorker(loginUser, board)) {
+            List<Card> list = cardRepository.findAllByColumns_IdAndIsDeletedIsFalseOrderBySequence(columnsId);
+
+            return list.stream().map(CardDto.CardResponse::of).toList();
+        }
+        return null;
     }
 
     public CardDto.CardResponse getCard(User user, Long cardId) {
@@ -91,7 +113,9 @@ public class CardService {
             throw new CardCustomException(CardExceptionCode.ALREADY_INVITED_USER);
         }
 
-        /* TODO: 해당 요청 유저가 보드에 권한을 가지고 있는지 체크하는 코드 */
+        if (!boardWorkerService.isExistedWorker(requestUser, card.getColumns().getBoard())) {
+            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+        }
         cardWorkerService.saveCardWorker(card, requestUser);
     }
 
@@ -111,7 +135,7 @@ public class CardService {
     }
 
     @Transactional
-    public CardDto.CardResponse moveCardInSameColumn(User user, Long cardId, CardDto.MoveCardRequest request) {
+    public CardDto.CardResponse moveCardInSameColumn(User user, Long cardId, CardDto.MoveCardInSameColRequest request) {
         Card card = getCardAndCheckAuth(user, cardId);
         Columns columns = card.getColumns();
 
@@ -131,6 +155,50 @@ public class CardService {
         card.updateSequence(changeSequence);
 
         return CardDto.CardResponse.of(card);
+    }
+
+    @Transactional
+    public CardDto.CardResponse moveCard(User user, Long cardId, CardDto.MoveCardRequest request) {
+        Card card = getCardAndCheckAuth(user, cardId);
+        Columns nowColumn = card.getColumns();
+        Columns changeColumn = columnsService.findColumns(request.getColumn_id());
+
+        if (request.getSequence() < 1 || changeColumn.getCardList().size() + 1 < request.getSequence()) {
+            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+        }
+
+        Long curSequence = card.getSequence();
+        Long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
+                        nowColumn.getId())
+                .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
+                .getSequence();
+
+        cardRepository.decreaseSequence(nowColumn.getId(), curSequence, last);
+
+        Card findCard = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
+                        changeColumn.getId())
+                .orElse(null);
+
+        if (findCard == null) last = 0L;
+        else last = findCard.getSequence();
+
+        cardRepository.increaseSequence(changeColumn.getId(), request.getSequence(), last + 1);
+
+        card.updateSequenceAndColumn(changeColumn, request.getSequence());
+
+        return CardDto.CardResponse.of(card);
+    }
+
+    @Transactional
+    public void deleteWorker(User user, Long cardId) {
+        Card card = getCardAndCheckAuth(user, cardId);
+        User worker = userService.findUserById(user.getId());
+
+        if (!cardWorkerService.isExistedWorker(worker, card)) {
+            throw new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD);
+        }
+
+        cardWorkerService.deleteWorker(card, worker);
     }
 
     public Card getCardAndCheckAuth(User user, Long cardId) {

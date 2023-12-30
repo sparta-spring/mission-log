@@ -86,4 +86,9 @@ public class Card extends CommonEntity {
     public void updateSequence(Long changeSequence) {
         this.sequence = changeSequence;
     }
+
+    public void updateSequenceAndColumn(Columns column, Long sequence) {
+        this.columns = column;
+        this.sequence = sequence;
+    }
 }
