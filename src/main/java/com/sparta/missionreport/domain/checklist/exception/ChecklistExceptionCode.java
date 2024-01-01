@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum ChecklistExceptionCode {
 
     // BAD_REQUEST 400
-    BAD_REQUEST_NOT_CHANGE_CHECKLIST_SEQUENCE(HttpStatus.BAD_REQUEST, "CHECKLIST-001",
-            "체크리스트의 순서가 변경되지 않았습니다."),
+    BAD_REQUEST_INVALID_UPDATE_SEQUENCE(HttpStatus.BAD_REQUEST, "CHECKLIST-001",
+            "유효하지 않는 변경 순서 값 입니다."),
 
     // UNAUTHORIZED 401
 

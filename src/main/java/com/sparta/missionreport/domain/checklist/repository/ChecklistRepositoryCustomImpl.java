@@ -16,9 +16,21 @@ public class ChecklistRepositoryCustomImpl implements ChecklistRepositoryCustom 
     public void decreaseSequence(Long cardId, Long start, Long end) {
         jpaQueryFactory.update(checklist)
                 .where(checklist.card.id.eq(cardId)
+                        .and(checklist.isDeleted.isFalse())
                         .and(checklist.sequence.between(start + 1, end))
                 )
                 .set(checklist.sequence, checklist.sequence.subtract(1))
+                .execute();
+    }
+
+    @Override
+    public void increaseSequence(Long cardId, Long start, Long end) {
+        jpaQueryFactory.update(checklist)
+                .where(checklist.card.id.eq(cardId)
+                        .and(checklist.isDeleted.isFalse())
+                        .and(checklist.sequence.between(start, end - 1))
+                )
+                .set(checklist.sequence, checklist.sequence.add(1))
                 .execute();
     }
 

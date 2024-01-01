@@ -1,6 +1,8 @@
 package com.sparta.missionreport.domain.checklist.service;
 
 import com.sparta.missionreport.domain.card.entity.Card;
+import com.sparta.missionreport.domain.card.exception.CardCustomException;
+import com.sparta.missionreport.domain.card.exception.CardExceptionCode;
 import com.sparta.missionreport.domain.card.service.CardService;
 import com.sparta.missionreport.domain.checklist.dto.ChecklistDto;
 import com.sparta.missionreport.domain.checklist.entity.Checklist;
@@ -9,6 +11,7 @@ import com.sparta.missionreport.domain.checklist.exception.ChecklistExceptionCod
 import com.sparta.missionreport.domain.checklist.repository.ChecklistRepository;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +63,21 @@ public class ChecklistService {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
-        // ToDo: sequence 변경
+        if (request.getSequence() < 1 ||
+                checklistRepository.countByCardIdAndIsDeletedFalse(card_id) < request.getSequence()
+                ||
+                Objects.equals(checklist.getSequence(), request.getSequence())) {
+            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+        }
+
+        Long oldSequence = checklist.getSequence();
+        Long newSequence = request.getSequence();
+        if (newSequence > oldSequence) {
+            checklistRepository.decreaseSequence(card.getId(), oldSequence, newSequence);
+        } else {
+            checklistRepository.increaseSequence(card.getId(), newSequence, oldSequence);
+        }
+        card.updateSequence(newSequence);
 
         return ChecklistDto.ChecklistResponse.of(checklist);
     }
@@ -70,9 +87,10 @@ public class ChecklistService {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
         Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
 
+        Long sequence = checklist.getSequence();
+        Long last = checklistRepository.countByCardIdAndIsDeletedFalse(card_id);
+        checklistRepository.decreaseSequence(checklist.getCard().getId(), sequence, last);
         checklist.deleteChecklist();
-
-        // ToDo: sequence 땡기기
     }
 
     public ChecklistDto.ChecklistResponse getChecklist(Long card_id, Long checklist_id, User user) {
