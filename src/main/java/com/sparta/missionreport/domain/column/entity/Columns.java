@@ -31,12 +31,14 @@ public class Columns extends CommonEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Color color = Color.NONE;
 
     @Column
     private Long sequence;
 
     @Column
+    @Builder.Default
     private Boolean isDeleted = false;
 
     @ManyToOne
@@ -44,6 +46,7 @@ public class Columns extends CommonEntity {
     private Board board;
 
     @OneToMany(mappedBy = "columns", cascade = CascadeType.PERSIST)
+    @Builder.Default
     private List<Card> cardList = new ArrayList<>();
 
     public void updateName(String name) {

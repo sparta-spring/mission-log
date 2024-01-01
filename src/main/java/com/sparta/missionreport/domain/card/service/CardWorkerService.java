@@ -2,6 +2,8 @@ package com.sparta.missionreport.domain.card.service;
 
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
+import com.sparta.missionreport.domain.card.exception.CardCustomException;
+import com.sparta.missionreport.domain.card.exception.CardExceptionCode;
 import com.sparta.missionreport.domain.card.repository.CardWorkerRepository;
 import com.sparta.missionreport.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +36,24 @@ public class CardWorkerService {
         for (CardWorker cardWorker : list) {
             cardWorker.delete();
         }
+    }
+
+    public List<CardWorker> findAllByWorkersInCard(Card card) {
+        return cardWorkerRepository.findAllByCard_IdAndIsDeletedIsFalse(card.getId());
+    }
+
+    public CardWorker searchUser(Card card, User searchUser) {
+        return cardWorkerRepository.findByCard_IdAndIsDeletedIsFalseAndUser_Email(card.getId(), searchUser.getEmail()).orElseThrow(
+                () -> new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD)
+        );
+    }
+
+    @Transactional
+    public void deleteWorker(Card card, User worker) {
+        CardWorker cardWorker = cardWorkerRepository.findCardWorkerByCard_IdAndUser_Id(card.getId(), worker.getId()).orElseThrow(
+                () -> new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD)
+        );
+
+        cardWorker.delete();
     }
 }

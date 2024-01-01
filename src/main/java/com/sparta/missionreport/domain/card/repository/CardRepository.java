@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface CardRepository extends JpaRepository<Card, Long>, CardRepositoryCustom {
 
     Optional<Card> findByIdAndIsDeletedIsFalse(Long card_id);
+    List<Card> findAllByColumns_IdAndIsDeletedIsFalseOrderBySequence(Long column_id);
     Long countByColumns_IdAndIsDeletedIsFalse(Long columns_id);
 
     List<Card> findAllByColumns_Board_IdAndIsDeletedIsFalse(Long board_id);

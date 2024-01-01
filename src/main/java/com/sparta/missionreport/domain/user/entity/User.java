@@ -47,7 +47,8 @@ public class User extends CommonEntity {
     private UserRole role;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "user")
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
@@ -61,7 +62,7 @@ public class User extends CommonEntity {
     @OneToMany(mappedBy = "createdBy")
     private List<Card> cardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "createdBy")
     private List<Comment> commentList = new ArrayList<>();
 
     public void updateIsDeleted() {

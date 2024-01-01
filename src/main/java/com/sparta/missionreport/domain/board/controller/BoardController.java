@@ -2,10 +2,11 @@ package com.sparta.missionreport.domain.board.controller;
 
 import com.sparta.missionreport.domain.board.dto.BoardDto;
 import com.sparta.missionreport.domain.board.dto.BoardDto.Response;
-import com.sparta.missionreport.domain.board.dto.BoardWorkerRequestDto;
+import com.sparta.missionreport.domain.board.dto.BoardWorkerDto;
 import com.sparta.missionreport.domain.board.service.BoardService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -33,8 +35,8 @@ public class BoardController {
     @PostMapping("/boards")
     public ResponseEntity<CommonResponseDto> createboard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody @Valid BoardDto.CreateRequest createRequest) {
-        BoardDto.Response response = boardService.createBoard(userDetails.getUser(), createRequest);
+            @RequestBody @Valid BoardDto.CreateBoardRequest createBoardRequest) {
+        BoardDto.Response response = boardService.createBoard(userDetails.getUser(), createBoardRequest);
         return ResponseEntity.status(
                         HttpStatus.CREATED)
                 .body(new CommonResponseDto(HttpStatus.CONTINUE.value(), "보드가 작성되었습니다.", response));
@@ -43,7 +45,7 @@ public class BoardController {
     @PatchMapping("/boards/{board_id}/name")
     public ResponseEntity<CommonResponseDto> updateName(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
-            @RequestBody @Valid BoardDto.UpdateRequest updateRequest) {
+            @RequestBody @Valid BoardDto.UpdateBoardRequest updateRequest) {
         BoardDto.Response response = boardService.updateBoardName(userDetails.getUser(), board_id,
                 updateRequest);
         return ResponseEntity.status(HttpStatus.OK)
@@ -53,9 +55,9 @@ public class BoardController {
     @PatchMapping("/boards/{board_id}/color")
     public ResponseEntity<CommonResponseDto> updateColor(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
-            @RequestBody @Valid BoardDto.UpdateRequest updateRequest) {
+            @RequestBody @Valid BoardDto.UpdateBoardRequest updateBoardRequest) {
         BoardDto.Response response = boardService.updateBoardColor(userDetails.getUser(), board_id,
-                updateRequest);
+                updateBoardRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
@@ -63,9 +65,9 @@ public class BoardController {
     @PatchMapping("/boards/{board_id}/description")
     public ResponseEntity<CommonResponseDto> updateDescription(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
-            @RequestBody @Valid BoardDto.UpdateRequest updateRequest) {
+            @RequestBody @Valid BoardDto.UpdateBoardRequest updateBoardRequest) {
         BoardDto.Response response = boardService.updateBoardDescription(userDetails.getUser(),
-                board_id, updateRequest);
+                board_id, updateBoardRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
@@ -95,11 +97,33 @@ public class BoardController {
     }
 
     @PostMapping("/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto> inviteNewUser(
-            @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
-            @RequestBody @Valid BoardWorkerRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto> inviteNewUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable Long board_id,
+                                                            @RequestBody @Valid BoardWorkerDto.BoardWorkerInviteRequest requestDto) {
         boardService.inviteNewUser(userDetails.getUser(), board_id, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "보드에 새로운 사용자를 초대하였습니다.", null));
     }
+
+    @Operation
+    @GetMapping("/boards/{board_id}/workers")
+    public ResponseEntity<CommonResponseDto> getBoardsInBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable Long board_id) {
+        List<BoardWorkerDto.BoardWorkerResponse> response = boardService.getWorkersInBoard(userDetails.getUser(), board_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "보드 작업자 리스트를 조회하였습니다.", response));
+    }
+
+    @Operation
+    @GetMapping("/boards/{board_id}/search/workers")
+    public ResponseEntity<CommonResponseDto> searchWorkerInBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                 @PathVariable Long board_id,
+                                                                 @RequestParam(name = "email", required = true) String email
+    ) {
+        BoardWorkerDto.BoardWorkerResponse response = boardService.searchWorkerInBoard(userDetails.getUser(), board_id, email);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto(HttpStatus.OK.value(), "보드 작업자를 검색하였습니다.", response));
+    }
+
+
 }
