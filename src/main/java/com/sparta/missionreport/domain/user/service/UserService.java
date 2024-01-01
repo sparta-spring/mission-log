@@ -6,6 +6,8 @@ import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.domain.user.exception.UserCustomException;
 import com.sparta.missionreport.domain.user.exception.UserExceptionCode;
 import com.sparta.missionreport.domain.user.repository.UserRepository;
+import com.sparta.missionreport.global.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,49 +19,77 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public void signup(UserDto.SignupRequestDto requestDto) throws Exception {
+    public UserDto.UserResponse signup(UserDto.SignupRequest request) {
 
-        if (userRepository.existsByEmail(requestDto.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserCustomException(UserExceptionCode.CONFLICT_USER_EMAIL_IN_USE);
         }
 
         User user = User.builder()
-                .email(requestDto.getEmail())
-                .name(requestDto.getName())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .email(request.getEmail())
+                .name(request.getName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .isDeleted(false)
                 .role(UserRole.USER)
                 .build();
 
         userRepository.save(user);
+
+        return UserDto.UserResponse.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
+
+    public void logout(HttpServletRequest request) {
+
+        jwtUtil.deleteRefreshToken(request);
+
+    }
+
+    public void delete(HttpServletRequest request, User user) {
+
+        jwtUtil.deleteRefreshToken(request);
+
+        user.updateIsDeleted();
+        userRepository.save(user);
+
     }
 
     @Transactional
-    public void updatePassword(UserDto.UpdatePasswordRequestDto requestDto, User user)
-            throws Exception {
+    public UserDto.UserResponse updatePassword(UserDto.UpdateUserPasswordRequest request,
+            User user) {
 
-        if (!passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new UserCustomException(UserExceptionCode.BAD_REQUEST_NOT_MATCH_PASSWORD);
         }
 
-        user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
-
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+
+        return UserDto.UserResponse.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
     @Transactional
-    public void updateName(UserDto.UpdateNameRequestDto requestDto, User user)
-            throws Exception {
+    public UserDto.UserResponse updateName(UserDto.UpdateUserNameRequest request, User user) {
 
-        user.setName(requestDto.getName());
-
+        user.updateName(request);
         userRepository.save(user);
+
+        return UserDto.UserResponse.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
-    public UserDto.GetUserInfoResponseDto getUserInfo(User user)
-            throws Exception {
+    public UserDto.UserResponse getUserInfo(User user) {
 
-        return UserDto.GetUserInfoResponseDto.builder()
+        return UserDto.UserResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
@@ -72,7 +102,7 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(()
+        return userRepository.findByEmailAndIsDeletedFalse(email).orElseThrow(()
                 -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER));
     }
 

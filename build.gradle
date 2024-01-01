@@ -48,6 +48,10 @@ dependencies {
 
     // spring doc
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.3'
+
+    //spring email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // email html 용
 }
 
 // Querydsl 설정부
