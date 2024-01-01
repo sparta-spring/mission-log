@@ -82,7 +82,8 @@ public class CardService {
     }
 
     @Transactional
-    public void inviteUser(User user, Long cardId, CardWorkerDto.CardWorkerInviteRequest requestDto) {
+    public void inviteUser(User user, Long cardId,
+            CardWorkerDto.CardWorkerInviteRequest requestDto) {
         Card card = getCardAndCheckAuth(user, cardId);
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
 

@@ -5,6 +5,7 @@ import com.sparta.missionreport.domain.board.entity.BoardWorker;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.comment.entity.Comment;
+import com.sparta.missionreport.domain.user.dto.UserDto;
 import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import jakarta.persistence.Column;
@@ -20,12 +21,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Builder
-@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -67,6 +66,14 @@ public class User extends CommonEntity {
 
     public void updateIsDeleted() {
         this.isDeleted = !this.isDeleted;
+    }
+
+    public void updatePassword(String encodingPassword) {
+        this.password = encodingPassword;
+    }
+
+    public void updateName(UserDto.UpdateUserNameRequest request) {
+        this.name = request.getName();
     }
 
 }

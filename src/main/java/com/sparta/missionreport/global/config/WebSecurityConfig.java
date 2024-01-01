@@ -76,6 +76,7 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers("/api/users/signup").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/users/email/*").permitAll()
                         // swagger v2
                         .requestMatchers("/v2/api-docs",
                                 "/swagger-resources",

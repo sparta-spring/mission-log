@@ -29,14 +29,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) {
         try {
-            UserDto.LoginRequestDto requestDto = new ObjectMapper().readValue(
+            UserDto.LoginRequest loginRequest = new ObjectMapper().readValue(
                     request.getInputStream(),
-                    UserDto.LoginRequestDto.class);
+                    UserDto.LoginRequest.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            requestDto.getEmail(),
-                            requestDto.getPassword(),
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword(),
                             null
                     )
             );
