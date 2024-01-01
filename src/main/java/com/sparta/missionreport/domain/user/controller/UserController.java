@@ -6,6 +6,7 @@ import com.sparta.missionreport.domain.user.service.UserService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-@Tag(name = "User Controller", description = "User Controller")
+@Tag(name = "1. User Controller", description = "User Controller")
 public class UserController {
 
     private final UserService userService;
     private final EmailAuthService emailAuthService;
 
-    @Operation(summary = "유저 회원가입 (no auth)")
+    @Operation(summary = "유저 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<CommonResponseDto> signup(
             @Valid @RequestBody UserDto.SignupRequest request) {
@@ -41,7 +42,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.CREATED.value(), "회원가입 성공", response));
     }
 
-    @Operation(summary = "유저 이메일 인증번호 전송 (no auth)")
+    @Operation(summary = "유저 이메일 인증번호 전송")
     @PostMapping("/email/send")
     public ResponseEntity<CommonResponseDto> emailSend(
             @RequestBody UserDto.SendEmailRequest request)
@@ -53,7 +54,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "이메일 인증번호 전송 성공", null));
     }
 
-    @Operation(summary = "유저 이메일 인증번호 확인 (no auth)")
+    @Operation(summary = "유저 이메일 인증번호 확인")
     @PostMapping("/email/auth")
     public ResponseEntity<CommonResponseDto> emailAuth(
             @RequestBody UserDto.AuthEmailRequest request) {
@@ -64,6 +65,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "이메일 인증번호 인증 성공", null));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "유저 로그아웃")
     @PatchMapping("/logout")
     public ResponseEntity<CommonResponseDto> logout(HttpServletRequest request,
@@ -75,6 +77,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "로그아웃 성공", null));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "유저 탈퇴")
     @PatchMapping("/delete")
     public ResponseEntity<CommonResponseDto> deleteUser(HttpServletRequest request,
@@ -86,6 +89,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "회원 탈퇴 성공", null));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "유저 비밀번호 변경")
     @PatchMapping("/password")
     public ResponseEntity<CommonResponseDto> updatePassword(
@@ -99,6 +103,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "비밀번호 수정 성공", response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "유저 이름 변경")
     @PatchMapping("/name")
     public ResponseEntity<CommonResponseDto> updateName(
@@ -112,6 +117,7 @@ public class UserController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "이름 수정 성공", response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "유저 정보 조회")
     @GetMapping("")
     public ResponseEntity<CommonResponseDto> getUserInfo(
