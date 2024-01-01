@@ -5,6 +5,7 @@ import com.sparta.missionreport.domain.checklist.service.ChecklistService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Tag(name = "CheckList Controller", description = "CheckList Controller")
+@Tag(name = "5. CheckList Controller", description = "CheckList Controller")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ChecklistController {
 
     private final ChecklistService checklistService;
