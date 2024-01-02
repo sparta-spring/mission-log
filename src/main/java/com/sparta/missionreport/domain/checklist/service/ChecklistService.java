@@ -11,6 +11,8 @@ import com.sparta.missionreport.domain.checklist.exception.ChecklistExceptionCod
 import com.sparta.missionreport.domain.checklist.repository.ChecklistRepository;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,8 +67,7 @@ public class ChecklistService {
 
         if (request.getSequence() < 1 ||
                 checklistRepository.countByCardIdAndIsDeletedFalse(card_id) < request.getSequence()
-                ||
-                Objects.equals(checklist.getSequence(), request.getSequence())) {
+                || Objects.equals(checklist.getSequence(), request.getSequence())) {
             throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
         }
 
@@ -77,7 +78,7 @@ public class ChecklistService {
         } else {
             checklistRepository.increaseSequence(card.getId(), newSequence, oldSequence);
         }
-        card.updateSequence(newSequence);
+        checklist.updateSequence(newSequence);
 
         return ChecklistDto.ChecklistResponse.of(checklist);
     }
@@ -93,11 +94,17 @@ public class ChecklistService {
         checklist.deleteChecklist();
     }
 
-    public ChecklistDto.ChecklistResponse getChecklist(Long card_id, Long checklist_id, User user) {
+    public List<ChecklistDto.ChecklistResponse> getChecklists(Long card_id, User user) {
         Card card = cardService.getCardAndCheckAuth(user, card_id);
-        Checklist checklist = getChecklistAndCheckAuth(user, checklist_id);
+        List<Checklist> checklists = checklistRepository.findByCardIdAndIsDeletedFalseOrderBySequence(
+                card_id);
+        List<ChecklistDto.ChecklistResponse> responseList = new ArrayList<>();
 
-        return ChecklistDto.ChecklistResponse.of(checklist);
+        for (Checklist checklist : checklists) {
+            responseList.add(ChecklistDto.ChecklistResponse.of(checklist));
+        }
+
+        return responseList;
     }
 
     public Checklist getChecklistAndCheckAuth(User user, Long checklistId) {
