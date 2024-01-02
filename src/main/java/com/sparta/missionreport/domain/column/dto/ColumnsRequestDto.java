@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
+
 public class ColumnsRequestDto {
 
     @Getter
@@ -26,7 +28,6 @@ public class ColumnsRequestDto {
     @AllArgsConstructor
     @Schema(description = "칼럼 이름 변경 요청 dto")
     public static class UpdateColumnNameRequestDto {
-
         @Schema(description = "변경할 이름", defaultValue = "test")
         private String name;
     }

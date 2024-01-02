@@ -69,7 +69,7 @@ public class ColumnsService {
         Columns column = findColumns(columnId);
         Long boardId = column.getBoard().getId();
         if(column.getSequence() < requestDto.getSequence()){
-            List<Columns> columnsList = columnsRepository.findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(boardId, column.getSequence() + 1, requestDto.getSequence());
+            List<Columns> columnsList = columnsRepository.findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(boardId, column.getSequence() + 1L, requestDto.getSequence());
             for(Columns columns : columnsList){
                 columns.updateSequence("-", 1L);
             }
@@ -84,7 +84,7 @@ public class ColumnsService {
 
         }
         else {
-            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_CHANGE_COLUMN_SEQUENCE);
+            throw new ColumnsCustomException(ColumnsExceptionCode.BAD_REQUEST_NOT_CHANGE_COLUMN_SEQUENCE);
         }
         return new ColumnsResponseDto(column);
     }
@@ -94,7 +94,7 @@ public class ColumnsService {
         Columns column = findColumns(columnId);
         Long boardId = column.getBoard().getId();
         if(!column.getCardList().isEmpty()){
-            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_ALLOW_DELETE_COLUM);
+            throw new ColumnsCustomException(ColumnsExceptionCode.NOT_ALLOWED_DELETE_COLUM);
         }
         List<Columns> columnsList = columnsRepository.findAllByBoardIdAndIsDeletedFalseAndSequenceGreaterThan(boardId, column.getSequence());
         for(Columns columns : columnsList){
@@ -120,7 +120,7 @@ public class ColumnsService {
 
     private void validateDuplicateName(String name, Long boardId){
         columnsRepository.findByNameAndIsDeletedFalseAndBoardId(name, boardId).ifPresent(m -> {
-            throw new ColumnsCustomException(ColumnsExceptionCode.DUPLICATE_COLUMN_NAME);
+            throw new ColumnsCustomException(ColumnsExceptionCode.CONFLICT_DUPLICATE_COLUMN_NAME);
         });
     }
 }

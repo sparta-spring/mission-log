@@ -13,7 +13,7 @@ public interface ColumnsRepository extends JpaRepository<Columns, Long> {
 
     Optional<Columns> findTopByBoardIdAndIsDeletedFalseOrderBySequenceDesc(Long boardId);
 
-    List<Columns> findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(Long boardId, long l, Long sequence);
+    List<Columns> findAllByIsDeletedFalseAndBoardIdAndSequenceBetween(Long boardId, Long l, Long sequence);
 
     List<Columns> findAllByBoardIdAndIsDeletedFalseAndSequenceGreaterThan(Long boardId, Long sequence);
 
