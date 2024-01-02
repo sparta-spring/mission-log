@@ -37,10 +37,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return UserDto.UserResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
+        return UserDto.UserResponse.of(user);
     }
 
     public void logout(HttpServletRequest request) {
@@ -69,10 +66,7 @@ public class UserService {
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
-        return UserDto.UserResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
+        return UserDto.UserResponse.of(user);
     }
 
     @Transactional
@@ -81,18 +75,12 @@ public class UserService {
         user.updateName(request);
         userRepository.save(user);
 
-        return UserDto.UserResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
+        return UserDto.UserResponse.of(user);
     }
 
     public UserDto.UserResponse getUserInfo(User user) {
 
-        return UserDto.UserResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
+        return UserDto.UserResponse.of(user);
     }
 
 

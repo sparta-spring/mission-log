@@ -7,6 +7,7 @@ import com.sparta.missionreport.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,11 +111,10 @@ public class ChecklistController {
     @GetMapping("/cards/{card_id}/checklists")
     public ResponseEntity<CommonResponseDto> getChecklist(
             @PathVariable Long card_id,
-            @PathVariable Long checklist_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        ChecklistDto.ChecklistResponse response =
-                checklistService.getChecklist(card_id, checklist_id, userDetails.getUser());
+        List<ChecklistDto.ChecklistResponse> response =
+                checklistService.getChecklists(card_id, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "체크리스트 조회 성공", response)

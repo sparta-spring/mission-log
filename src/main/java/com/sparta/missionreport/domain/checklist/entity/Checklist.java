@@ -45,14 +45,18 @@ public class Checklist extends CommonEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    public void update(ChecklistDto.UpdateChecklistRequest updateRequest) {
-        if (updateRequest.getContent() != null) {
-            this.content = updateRequest.getContent();
+    public void update(ChecklistDto.UpdateChecklistRequest request) {
+        if (request.getContent() != null) {
+            this.content = request.getContent();
         }
     }
 
     public void updateIsChecked() {
         this.isChecked = !this.isChecked;
+    }
+
+    public void updateSequence(Long sequence) {
+        this.sequence = sequence;
     }
 
     public void deleteChecklist() {
