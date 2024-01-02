@@ -143,7 +143,7 @@ public class BoardController {
     }
 
     @Operation(summary = "보드내 작업자 단일 조회")
-    @GetMapping("/boards/{board_id}/search/workers")
+    @GetMapping("/boards/{board_id}/workers/search")
     public ResponseEntity<CommonResponseDto> searchWorkerInBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long board_id,
