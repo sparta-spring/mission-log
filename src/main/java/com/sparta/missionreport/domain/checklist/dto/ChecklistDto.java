@@ -25,6 +25,8 @@ public class ChecklistDto {
                     .content(content)
                     .sequence(sequence)
                     .isChecked(false)
+                    .isDeleted(false)
+                    .card(card)
                     .build();
         }
     }
