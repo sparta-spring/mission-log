@@ -150,7 +150,7 @@ public class CardController {
     }
 
     @Operation(summary = "작업자 검색")
-    @GetMapping("/cards/{card_id}/search/workers")
+    @GetMapping("/cards/{card_id}/workers/search")
     public ResponseEntity<CommonResponseDto> searchWorkerInCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long card_id,
