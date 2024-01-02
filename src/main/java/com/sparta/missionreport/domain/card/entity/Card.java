@@ -7,15 +7,28 @@ import com.sparta.missionreport.domain.comment.entity.Comment;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import com.sparta.missionreport.global.enums.Color;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "cards")
@@ -73,10 +86,18 @@ public class Card extends CommonEntity {
     private List<Checklist> checklistList = new ArrayList<>();
 
     public void update(CardDto.UpdateCardRequest updateCardRequest) {
-        if (updateCardRequest.getName() != null) this.name = updateCardRequest.getName();
-        if (updateCardRequest.getColor() != null) this.color = updateCardRequest.getColor();
-        if (updateCardRequest.getDescription() != null) this.description = updateCardRequest.getDescription();
-        if (updateCardRequest.getDeadLine() != null) this.deadLine = updateCardRequest.getDeadLine();
+        if (updateCardRequest.getName() != null) {
+            this.name = updateCardRequest.getName();
+        }
+        if (updateCardRequest.getColor() != null) {
+            this.color = updateCardRequest.getColor();
+        }
+        if (updateCardRequest.getDescription() != null) {
+            this.description = updateCardRequest.getDescription();
+        }
+        if (updateCardRequest.getDeadLine() != null) {
+            this.deadLine = updateCardRequest.getDeadLine();
+        }
     }
 
     public void deleteCard() {
@@ -86,4 +107,10 @@ public class Card extends CommonEntity {
     public void updateSequence(Long changeSequence) {
         this.sequence = changeSequence;
     }
+
+    public void updateSequenceAndColumn(Columns column, Long sequence) {
+        this.columns = column;
+        this.sequence = sequence;
+    }
+
 }

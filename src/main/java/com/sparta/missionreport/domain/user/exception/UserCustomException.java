@@ -9,4 +9,5 @@ public class UserCustomException extends CustomException {
     public UserCustomException(UserExceptionCode e) {
         super(e.getHttpStatus(), e.getErrorCode(), e.getMessage());
     }
+
 }

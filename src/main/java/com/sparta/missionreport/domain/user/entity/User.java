@@ -5,6 +5,7 @@ import com.sparta.missionreport.domain.board.entity.BoardWorker;
 import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.card.entity.CardWorker;
 import com.sparta.missionreport.domain.comment.entity.Comment;
+import com.sparta.missionreport.domain.user.dto.UserDto;
 import com.sparta.missionreport.domain.user.enums.UserRole;
 import com.sparta.missionreport.global.entity.CommonEntity;
 import jakarta.persistence.Column;
@@ -20,12 +21,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Builder
-@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,7 +47,8 @@ public class User extends CommonEntity {
     private UserRole role;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "user")
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
@@ -62,11 +62,19 @@ public class User extends CommonEntity {
     @OneToMany(mappedBy = "createdBy")
     private List<Card> cardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "createdBy")
     private List<Comment> commentList = new ArrayList<>();
 
     public void updateIsDeleted() {
         this.isDeleted = !this.isDeleted;
+    }
+
+    public void updatePassword(String encodingPassword) {
+        this.password = encodingPassword;
+    }
+
+    public void updateName(UserDto.UpdateUserNameRequest request) {
+        this.name = request.getName();
     }
 
 }

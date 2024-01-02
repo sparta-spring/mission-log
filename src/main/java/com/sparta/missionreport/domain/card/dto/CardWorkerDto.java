@@ -18,7 +18,7 @@ public class CardWorkerDto {
     @Schema(name = "카드 작업자 초대 요청 dto")
     public static class CardWorkerInviteRequest {
 
-        @Schema(description = "초대할 유저 이메일", example = "sparta@gmail.com")
+        @Schema(description = "초대할 유저 이메일", defaultValue = "anotheruser@gmail.com")
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
         private String email;
@@ -32,13 +32,13 @@ public class CardWorkerDto {
     @AllArgsConstructor
     public static class CardWorkerResponse {
 
-        @Schema(description = "카드 작업자 id", example = "1L")
+        @Schema(description = "카드 작업자 id", defaultValue = "1L")
         private Long id;
 
-        @Schema(description = "카드 id", example = "1L")
+        @Schema(description = "카드 id", defaultValue = "1L")
         private Long cardId;
 
-        @Schema(description = "사용자 email", example = "sparta@gmail.com")
+        @Schema(description = "사용자 email", defaultValue = "sparta@gmail.com")
         private String worker;
 
 

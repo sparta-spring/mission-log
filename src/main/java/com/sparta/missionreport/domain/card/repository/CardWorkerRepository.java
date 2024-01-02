@@ -13,4 +13,6 @@ public interface CardWorkerRepository extends JpaRepository<CardWorker, Long> {
     List<CardWorker> findAllByCard_IdAndIsDeletedIsFalse(Long cardId);
 
     Optional<CardWorker> findByCard_IdAndIsDeletedIsFalseAndUser_Email(Long userId, String email);
+
+    Optional<CardWorker> findCardWorkerByCard_IdAndUser_Id(Long card_id, Long user_id);
 }

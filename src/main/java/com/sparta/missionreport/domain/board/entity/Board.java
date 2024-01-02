@@ -44,6 +44,7 @@ public class Board extends CommonEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Color color = Color.NONE;
 
     @Column
@@ -55,9 +56,11 @@ public class Board extends CommonEntity {
     private User createdBy;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
+    @Builder.Default
     private List<BoardWorker> boardWorkerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
+    @Builder.Default
     private List<Columns> columnsList = new ArrayList<>();
 
     public void update(BoardDto.UpdateBoardRequest updateBoardRequest) {
