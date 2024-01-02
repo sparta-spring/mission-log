@@ -6,13 +6,11 @@ import com.sparta.missionreport.global.entity.CommonEntity;
 import com.sparta.missionreport.global.enums.Color;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -20,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Table(name = "columns")
-public class Columns extends CommonEntity {
+public class Columns extends CommonEntity  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
