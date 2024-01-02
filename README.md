@@ -56,12 +56,13 @@
 
 
 ## 🪖 Personal Role
-| Name                                   | Role                                |
-|----------------------------------------|-------------------------------------|
-| [이지선](https://github.com/jiisuniui)    | User API, CheckList API |
-| [김종규](https://github.com/Kim-Jong-Gyu) | Column API, Store API, Menu API         |
-| [김대영](https://github.com/kdy9960)      | Board API                          |
-| [김혜윤](https://github.com/kimhyeyun)    | Card API, Comment API      |
+| Name | Role                                |
+|------|-------------------------------------|
+| [이지선](https://github.com/jiisuniui) | User API, CheckList API |
+| [김종규](https://github.com/Kim-Jong-Gyu) | Column API |
+| [김대영](https://github.com/kdy9960) | Board API |
+| [김혜윤](https://hyeyun.tistory.com/) | Card API, Comment API |
+
 
 ## 🪖 Commit Convention
 | Tag Name | Description |
