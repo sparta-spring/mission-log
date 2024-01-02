@@ -27,10 +27,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -178,6 +179,7 @@ class CardServiceTest {
     public class delete {
 
         @Test
+        @DisplayName("카드 삭제 성공 - 한 개의 카드 만 존재")
         void success() {
             // Given
             CardDto.CardResponse card = createCard();
@@ -190,6 +192,66 @@ class CardServiceTest {
                     .isInstanceOf(CardCustomException.class)
                     .hasMessage(CardExceptionCode.NOT_FOUND_CARD.getMessage());
         }
+
+        @Test
+        @DisplayName("성공 - 여러 카드 존재 시, 순서 변경")
+        void success_Exist_Cards() {
+            // Given
+            List<CardDto.CardResponse> cardList = createCardList();
+
+            // When
+            sut.deleteCard(user, cardList.get(2).getId());
+            List<CardDto.CardResponse> result = sut.getCardsByColumn(user, columnsResponse.getColumnId());
+
+            // Then
+            assertFalse(result.contains(cardList.get(2)));
+            for (CardDto.CardResponse response : result) {
+                System.out.println(response.getSequence());
+            }
+        }
+
+        @Test
+        @DisplayName("실패 - 카드 작업자가 아닌 경우")
+        void givenNonCardWorkerUser_whenDeleting_thenFail() {
+            // Given
+            CardDto.CardResponse card = createCard();
+
+            userService.signup(UserDto.SignupRequest.builder().email("anotheruser@gmail.com").password("testpw11").name("김낮선").build());
+            User anotherUser = userService.findUserByEmail("anotheruser@gmail.com");
+
+            // When & Then
+            assertThatThrownBy(() -> sut.deleteWorker(anotherUser, card.getId()))
+                    .isInstanceOf(CardCustomException.class)
+                    .hasMessage(CardExceptionCode.FORBIDDEN_ABOUT_CARD.getMessage());
+        }
+
+        @Test
+        @DisplayName("실패 - 없는 카드 ID")
+        void givenNonExistedCardId_whenDeleting_thenFail() {
+            // Given
+
+            // When & Then
+            assertThatThrownBy(() -> sut.deleteCard(user, 1L))
+                    .isInstanceOf(CardCustomException.class)
+                    .hasMessage(CardExceptionCode.NOT_FOUND_CARD.getMessage());
+        }
+    }
+
+
+    private List<CardDto.CardResponse> createCardList() {
+        List<CardDto.CreateCardRequest> requests = List.of(
+                CardDto.CreateCardRequest.builder().name("card1").build(),
+                CardDto.CreateCardRequest.builder().name("card2").build(),
+                CardDto.CreateCardRequest.builder().name("card3").build(),
+                CardDto.CreateCardRequest.builder().name("card4").build(),
+                CardDto.CreateCardRequest.builder().name("card5").build()
+        );
+
+        List<CardDto.CardResponse> responses = new ArrayList<>();
+        for (CardDto.CreateCardRequest request : requests) {
+            responses.add(sut.createCard(user, columnsResponse.getColumnId(), request));
+        }
+        return responses;
     }
 
     private CardDto.CardResponse createCard() {
