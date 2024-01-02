@@ -16,6 +16,8 @@ public class ColumnsResponseDto {
 
     @Schema(description = "보드 아이디", nullable = false, example = "1L")
     private Long boardId;
+    @Schema(description = "칼럼 아이디", nullable = false, example = "1L")
+    private Long columnId;
     @Schema(description = "칼럼 이름", nullable = false, example = "test")
     private String name;
     @Schema(description = "칼럼 색상", nullable = false, example = "NONE")
@@ -26,6 +28,7 @@ public class ColumnsResponseDto {
 
     public ColumnsResponseDto(Columns columns) {
         this.boardId = columns.getBoard().getId();
+        this.columnId = columns.getId();
         this.name = columns.getName();
         this.color = columns.getColor();
         this.sequence = columns.getSequence();
