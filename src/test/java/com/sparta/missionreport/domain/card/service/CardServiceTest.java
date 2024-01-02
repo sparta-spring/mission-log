@@ -220,7 +220,7 @@ class CardServiceTest {
             User anotherUser = userService.findUserByEmail("anotheruser@gmail.com");
 
             // When & Then
-            assertThatThrownBy(() -> sut.deleteWorker(anotherUser, card.getId()))
+            assertThatThrownBy(() -> sut.deleteCard(anotherUser, card.getId()))
                     .isInstanceOf(CardCustomException.class)
                     .hasMessage(CardExceptionCode.FORBIDDEN_ABOUT_CARD.getMessage());
         }
