@@ -65,13 +65,15 @@ public class CardService {
         card.deleteCard();
         cardWorkerService.deleteWorkers(card);
 
-        long sequence = card.getSequence();
-        long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
-                        card.getColumns().getId())
-                .orElseThrow(() -> new CardCustomException(CardExceptionCode.NOT_FOUND_CARD))
-                .getSequence();
+        if (!cardRepository.countByColumns_IdAndIsDeletedIsFalse(card.getColumns().getId()).equals(0L)) {
+            long sequence = card.getSequence();
+            long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
+                            card.getColumns().getId())
+                    .orElseThrow(() -> new CardCustomException(CardExceptionCode.NOT_FOUND_CARD))
+                    .getSequence();
 
-        cardRepository.decreaseSequence(card.getColumns().getId(), sequence, last);
+            cardRepository.decreaseSequence(card.getColumns().getId(), sequence, last);
+        }
     }
 
     public List<CardDto.CardResponse> getCardsByBoard(User user, Long boardId) {
