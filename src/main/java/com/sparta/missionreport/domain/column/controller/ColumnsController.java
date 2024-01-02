@@ -36,7 +36,7 @@ public class ColumnsController {
         ColumnsResponseDto columnsResponseDto = columnsService.addColumn(requestDto, boardId);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CommonResponseDto(HttpStatus.CREATED.value()
-                        , "카드 생성 성공"
+                        , "칼럼 생성 성공"
                         , columnsResponseDto));
     }
 

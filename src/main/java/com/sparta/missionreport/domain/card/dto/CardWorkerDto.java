@@ -15,6 +15,9 @@ import java.util.List;
 public class CardWorkerDto {
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema(name = "카드 작업자 초대 요청 dto")
     public static class CardWorkerInviteRequest {
 
