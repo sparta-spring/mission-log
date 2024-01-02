@@ -1,5 +1,6 @@
 package com.sparta.missionreport.domain.user.dto;
 
+import com.sparta.missionreport.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -97,6 +98,13 @@ public class UserDto {
 
         @Schema(description = "유저 이름", defaultValue = "스파르타")
         private String name;
+
+        public static UserResponse of(User user) {
+            return UserResponse.builder()
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .build();
+        }
 
     }
 }
