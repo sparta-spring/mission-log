@@ -11,6 +11,7 @@ import lombok.Getter;
 public class UserDto {
 
     @Getter
+    @Builder
     @Schema(description = "유저 회원가입 요청 dto")
     public static class SignupRequest {
 
@@ -31,6 +32,7 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "유저 이메일 인증번호 전송 요청 dto")
     public static class SendEmailRequest {
 
@@ -41,6 +43,7 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "유저 이메일 인증번호 인증 요청 dto")
     public static class AuthEmailRequest {
 
@@ -54,6 +57,7 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "유저 로그인 요청 dto")
     public static class LoginRequest {
 
@@ -67,6 +71,7 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "유저 비밀번호 변경 요청 dto")
     public static class UpdateUserPasswordRequest {
 
@@ -80,6 +85,7 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "유저 이름 변경 요청 dto")
     public static class UpdateUserNameRequest {
 
