@@ -27,7 +27,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
+    implementation 'com.h2database:h2'
+    implementation 'com.google.guava:guava:32.0.0-jre'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
