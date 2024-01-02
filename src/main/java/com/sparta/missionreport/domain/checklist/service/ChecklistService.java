@@ -68,7 +68,7 @@ public class ChecklistService {
         if (request.getSequence() < 1 ||
                 checklistRepository.countByCardIdAndIsDeletedFalse(card_id) < request.getSequence()
                 || Objects.equals(checklist.getSequence(), request.getSequence())) {
-            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+            throw new CardCustomException(CardExceptionCode.BAD_REQUEST_UPDATE_SEQUENCE);
         }
 
         Long oldSequence = checklist.getSequence();

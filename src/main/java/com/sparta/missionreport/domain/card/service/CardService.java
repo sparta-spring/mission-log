@@ -14,12 +14,11 @@ import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.domain.column.service.ColumnsService;
 import com.sparta.missionreport.domain.user.entity.User;
 import com.sparta.missionreport.domain.user.service.UserService;
-import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class CardService {
         User createdBy = userService.findUserById(user.getId());
 
         if (!boardWorkerService.isExistedWorker(createdBy, columns.getBoard())) {
-            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+            throw new CardCustomException(CardExceptionCode.FORBIDDEN_ABOUT_REQUEST);
         }
 
         long sequence = cardRepository.countByColumns_IdAndIsDeletedIsFalse(columnId) + 1;
@@ -69,7 +68,7 @@ public class CardService {
         long sequence = card.getSequence();
         long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
                         card.getColumns().getId())
-                .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
+                .orElseThrow(() -> new CardCustomException(CardExceptionCode.NOT_FOUND_CARD))
                 .getSequence();
 
         cardRepository.decreaseSequence(card.getColumns().getId(), sequence, last);
@@ -79,7 +78,7 @@ public class CardService {
         Board board = boardService.findBoardByID(boardId);
         User loginUser = userService.findUserById(user.getId());
         if (!boardWorkerService.isExistedWorker(loginUser, board)) {
-            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+            throw new CardCustomException(CardExceptionCode.FORBIDDEN_ABOUT_REQUEST);
         }
 
         List<Card> cards = cardRepository.findAllByColumns_Board_IdAndIsDeletedIsFalse(boardId);
@@ -111,11 +110,11 @@ public class CardService {
         User requestUser = userService.findUserByEmail(requestDto.getEmail());
 
         if (cardWorkerService.isExistedWorker(requestUser, card)) {
-            throw new CardCustomException(CardExceptionCode.ALREADY_INVITED_USER);
+            throw new CardCustomException(CardExceptionCode.CONFLICT_INVITED_USER);
         }
 
         if (!boardWorkerService.isExistedWorker(requestUser, card.getColumns().getBoard())) {
-            throw new CardCustomException(CardExceptionCode.NO_INVITED_REQUEST_USER);
+            throw new CardCustomException(CardExceptionCode.BAD_REQUEST_INVITED_REQUEST_USER);
         }
         cardWorkerService.saveCardWorker(card, requestUser);
     }
@@ -141,7 +140,7 @@ public class CardService {
         Columns columns = card.getColumns();
 
         if (request.getSequence() < 1 || columns.getCardList().size() < request.getSequence()) {
-            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+            throw new CardCustomException(CardExceptionCode.BAD_REQUEST_UPDATE_SEQUENCE);
         }
 
         Long curSequence = card.getSequence();
@@ -149,6 +148,8 @@ public class CardService {
 
         if (changeSequence > curSequence) {
             cardRepository.decreaseSequence(columns.getId(), curSequence, changeSequence);
+        } else if (changeSequence.equals(curSequence)) {
+            throw new CardCustomException(CardExceptionCode.CONFLICT_UPDATE_SEQUENCE_IS_CURRENT_VALUE);
         } else {
             cardRepository.increaseSequence(columns.getId(), changeSequence, curSequence);
         }
@@ -165,13 +166,13 @@ public class CardService {
         Columns changeColumn = columnsService.findColumns(request.getColumn_id());
 
         if (request.getSequence() < 1 || changeColumn.getCardList().size() + 1 < request.getSequence()) {
-            throw new CardCustomException(CardExceptionCode.INVALID_UPDATE_SEQUENCE);
+            throw new CardCustomException(CardExceptionCode.BAD_REQUEST_UPDATE_SEQUENCE);
         }
 
         Long curSequence = card.getSequence();
         Long last = cardRepository.findTopByColumns_IdAndIsDeletedIsFalseOrderBySequenceDesc(
                         nowColumn.getId())
-                .orElseThrow(() -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND))
+                .orElseThrow(() -> new CardCustomException(CardExceptionCode.NOT_FOUND_CARD))
                 .getSequence();
 
         cardRepository.decreaseSequence(nowColumn.getId(), curSequence, last);
@@ -207,7 +208,7 @@ public class CardService {
         User loginUser = userService.findUserById(user.getId());
 
         if (!cardWorkerService.isExistedWorker(loginUser, card)) {
-            throw new CardCustomException(CardExceptionCode.NOT_AUTHORIZATION_ABOUT_CARD);
+            throw new CardCustomException(CardExceptionCode.FORBIDDEN_ABOUT_CARD);
         }
 
         return card;
@@ -216,7 +217,7 @@ public class CardService {
 
     public Card findCardById(Long cardId) {
         return cardRepository.findByIdAndIsDeletedIsFalse(cardId).orElseThrow(
-                () -> new CardCustomException(CardExceptionCode.CARD_NOT_FOUND)
+                () -> new CardCustomException(CardExceptionCode.NOT_FOUND_CARD)
         );
     }
 }

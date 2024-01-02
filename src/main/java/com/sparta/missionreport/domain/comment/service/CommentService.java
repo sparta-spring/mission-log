@@ -32,7 +32,7 @@ public class CommentService {
         User requestUser = userService.findUserById(user.getId());
 
         if (!boardWorkerService.isExistedWorker(requestUser, card.getColumns().getBoard())) {
-            throw new CommentCustomException(CommentExceptionCode.NOT_AUTHORIZATION_ABOUT_REQUEST);
+            throw new CommentCustomException(CommentExceptionCode.FORBIDDEN_ABOUT_REQUEST);
         }
 
         Comment savedComment = commentRepository.save(request.toEntity(requestUser, card));
@@ -70,7 +70,7 @@ public class CommentService {
         Comment comment = findCommentById(commentId);
 
         if (!comment.getCreatedBy().getId().equals(user.getId())) {
-            throw new CommentCustomException(CommentExceptionCode.NOT_AUTHORIZATION_ABOUT_COMMENT);
+            throw new CommentCustomException(CommentExceptionCode.FORBIDDEN_ABOUT_COMMENT);
         }
         return comment;
     }
