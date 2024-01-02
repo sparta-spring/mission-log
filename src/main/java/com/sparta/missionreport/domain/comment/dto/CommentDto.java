@@ -13,6 +13,9 @@ public class CommentDto {
 
     @Schema(description = "댓글 생성 요청 dto")
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CreateCommentRequest {
 
         @Schema(description = "댓글 내용", defaultValue = "퍼가요~^^")
@@ -30,6 +33,9 @@ public class CommentDto {
 
     @Schema(description = "댓글 수정 요청 dto")
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UpdateCommentRequest {
 
         @Schema(description = "댓글 내용", defaultValue = "언제 하시나요 ~^^")
