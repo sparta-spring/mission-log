@@ -194,9 +194,9 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteWorker(User user, Long cardId) {
+    public void deleteWorker(User user, Long cardId, String email) {
         Card card = getCardAndCheckAuth(user, cardId);
-        User worker = userService.findUserById(user.getId());
+        User worker = userService.findUserByEmail(email);
 
         if (!cardWorkerService.isExistedWorker(worker, card)) {
             throw new CardCustomException(CardExceptionCode.NOT_FOUND_WORKER_IN_CARD);
