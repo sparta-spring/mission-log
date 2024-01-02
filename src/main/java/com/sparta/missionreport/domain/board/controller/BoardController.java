@@ -44,7 +44,7 @@ public class BoardController {
                 createBoardRequest);
         return ResponseEntity.status(
                         HttpStatus.CREATED)
-                .body(new CommonResponseDto(HttpStatus.CONTINUE.value(), "보드가 작성되었습니다.", response));
+                .body(new CommonResponseDto(HttpStatus.CREATED.value(), "보드가 작성되었습니다.", response));
     }
 
     @PatchMapping("/boards/{board_id}/name")
@@ -77,7 +77,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
-    @DeleteMapping("/boards/{board_id}")
+    @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id) {
         boardService.deleteBoard(userDetails.getUser(), board_id);

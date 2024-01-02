@@ -64,6 +64,7 @@ public class BoardService {
         return BoardDto.Response.of(board);
     }
 
+    @Transactional
     public void deleteBoard(User user, Long boardId) {
         Board board = getBoardAndCheckAuth(user, boardId);
         board.deleteBoard();
