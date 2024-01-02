@@ -5,14 +5,13 @@ import com.sparta.missionreport.domain.card.entity.Card;
 import com.sparta.missionreport.domain.checklist.entity.Checklist;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 public class ChecklistDto {
 
     @Getter
+    @Builder
     @Schema(description = "체크리스트 생성 요청 dto")
     public static class CreateChecklistRequest {
 
@@ -32,6 +31,7 @@ public class ChecklistDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "체크리스트 변경 요청 dto (순서 제외)")
     public static class UpdateChecklistRequest {
 
@@ -41,6 +41,7 @@ public class ChecklistDto {
     }
 
     @Getter
+    @Builder
     @Schema(description = "체크리스트 순서 변경 요청 dto")
     public static class UpdateChecklistSequenceRequest {
 
@@ -52,8 +53,6 @@ public class ChecklistDto {
 
     @Getter
     @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Schema(description = "체크리스트 응답 dto")
     public static class ChecklistResponse {
 
