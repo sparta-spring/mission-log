@@ -11,4 +11,6 @@ public interface BoardWorkerRepository extends JpaRepository<BoardWorker, Long> 
     List<BoardWorker> findAllByBoard_IdAndIsDeletedIsFalse(Long boardId);
 
     Optional<BoardWorker> findByBoard_IdAndIsDeletedIsFalseAndUser_Email(Long userId, String email);
+
+    Optional<BoardWorker> findBoardWorkerByBoard_IdAndUser_Id(Long board_id, Long user_id);
 }

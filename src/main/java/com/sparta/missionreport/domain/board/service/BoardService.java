@@ -64,10 +64,11 @@ public class BoardService {
         return BoardDto.Response.of(board);
     }
 
+    @Transactional
     public void deleteBoard(User user, Long boardId) {
         Board board = getBoardAndCheckAuth(user, boardId);
         board.deleteBoard();
-        boardWorkerService.deleteBoardWorker(board);
+        boardWorkerService.deleteBoardWorkers(board);
     }
 
     public List<Response> getBoards(User user) {
@@ -105,7 +106,17 @@ public class BoardService {
         return BoardWorkerDto.BoardWorkerResponse.of(boardWorker);
     }
 
+    @Transactional
+    public void deleteBoardWorker(User user, Long boardId) {
+        Board board = getBoardAndCheckAuth(user, boardId);
+        User boardWorker = userService.findUserById(user.getId());
 
+        if (!boardWorkerService.isExistedWorker(boardWorker, board)) {
+            throw new BoardCustomException(BoardExceptionCode.NOT_FOUND_WORKER_IN_BOARD);
+        }
+
+        boardWorkerService.deleteBoardWorker(board, boardWorker);
+    }
 
     private Board getBoardAndCheckAuth(User user, Long boardId) {
         Board board = findBoardByID(boardId);
