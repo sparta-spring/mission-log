@@ -4,10 +4,8 @@ import com.sparta.missionreport.domain.board.entity.BoardWorker;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 
 @Schema(name = "보드 작업자 dto")
@@ -28,8 +26,6 @@ public class BoardWorkerDto {
     @Schema(name = "보드 작업자 정보 응답 dto")
     @Builder
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class BoardWorkerResponse {
 
         @Schema(description = "보드 작업자 id", example = "1L")
