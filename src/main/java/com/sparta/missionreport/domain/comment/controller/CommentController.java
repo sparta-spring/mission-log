@@ -4,6 +4,7 @@ import com.sparta.missionreport.domain.comment.dto.CommentDto;
 import com.sparta.missionreport.domain.comment.service.CommentService;
 import com.sparta.missionreport.global.common.CommonResponseDto;
 import com.sparta.missionreport.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @Operation(summary = "댓글 생성")
     @PostMapping("/cards/{card_id}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -42,6 +44,7 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "댓글 수정")
     @PatchMapping("/comments/{comment_id}/update")
     public ResponseEntity<CommonResponseDto> updateComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -55,6 +58,7 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "댓글 삭제")
     @PatchMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto> deleteComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -66,6 +70,7 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "해당 카드 내의 댓글 리스트 조회")
     @GetMapping("/cards/{card_id}/comments")
     public ResponseEntity<CommonResponseDto> getCommentsInCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -78,6 +83,7 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "댓글 단건 조회")
     @GetMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto> getComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
