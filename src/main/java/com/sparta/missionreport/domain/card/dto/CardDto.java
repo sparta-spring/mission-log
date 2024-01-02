@@ -22,6 +22,9 @@ import java.util.List;
 public class CardDto {
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema(description = "카드 생성 요청 dto")
     public static class CreateCardRequest {
 
@@ -40,6 +43,9 @@ public class CardDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema(description = "카드 수정 요청 dto")
     public static class UpdateCardRequest {
 
@@ -58,6 +64,9 @@ public class CardDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema(description = "동일 컬럼 내 순서 이동 요청 dto")
     public static class MoveCardInSameColRequest {
 
@@ -67,6 +76,9 @@ public class CardDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema(description = "다른 컬럼으로 이동 요청 dto")
     public static class MoveCardRequest {
 
