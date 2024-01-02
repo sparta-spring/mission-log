@@ -3,12 +3,17 @@ package com.sparta.missionreport.domain.column.dto;
 import com.sparta.missionreport.domain.column.entity.Columns;
 import com.sparta.missionreport.global.enums.Color;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ColumnsResponseDto {
+
     @Schema(description = "보드 아이디", nullable = false, example = "1L")
     private Long boardId;
     @Schema(description = "칼럼 이름", nullable = false, example = "test")
