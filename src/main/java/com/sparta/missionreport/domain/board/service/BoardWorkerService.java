@@ -29,7 +29,7 @@ public class BoardWorkerService {
     }
 
     @Transactional
-    public void deleteBoardWorker(Board board) {
+    public void deleteBoardWorkers(Board board) {
         List<BoardWorker> list = boardWorkerRepository.findAllByBoard_IdAndIsDeletedIsFalse(board.getId());
         for (BoardWorker boardWorker : list) {
             boardWorker.delete();
@@ -43,5 +43,12 @@ public class BoardWorkerService {
     public BoardWorker serchBoardUser(Board board, User searchBoardUser) {
         return boardWorkerRepository.findByBoard_IdAndIsDeletedIsFalseAndUser_Email(board.getId(), searchBoardUser.getEmail()).orElseThrow(
                 () -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_WORKER_IN_BOARD));
+    }
+
+    @Transactional
+    public void deleteBoardWorker(Board board, User boardWorker) {
+        BoardWorker worker = boardWorkerRepository.findBoardWorkerByBoard_IdAndUser_Id(board.getId(), boardWorker.getId()).orElseThrow(
+                ()-> new BoardCustomException(BoardExceptionCode.NOT_FOUND_WORKER_IN_BOARD)
+        );
     }
 }

@@ -36,6 +36,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    @Operation(summary = "보드 생성")
     @PostMapping("/boards")
     public ResponseEntity<CommonResponseDto> createboard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -47,6 +48,7 @@ public class BoardController {
                 .body(new CommonResponseDto(HttpStatus.CREATED.value(), "보드가 작성되었습니다.", response));
     }
 
+    @Operation(summary = "보드 수정 : 이름")
     @PatchMapping("/boards/{board_id}/name")
     public ResponseEntity<CommonResponseDto> updateName(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
@@ -57,6 +59,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
+    @Operation(summary = "보드 수정 : 색상")
     @PatchMapping("/boards/{board_id}/color")
     public ResponseEntity<CommonResponseDto> updateColor(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
@@ -67,6 +70,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
+    @Operation(summary = "보드 수정 : 설명")
     @PatchMapping("/boards/{board_id}/description")
     public ResponseEntity<CommonResponseDto> updateDescription(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id,
@@ -77,6 +81,7 @@ public class BoardController {
                 .body(new CommonResponseDto<>(HttpStatus.OK.value(), "보드가 수정되었습니다.", response));
     }
 
+    @Operation(summary = "보드 삭제")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id) {
@@ -85,6 +90,7 @@ public class BoardController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "보드가 삭제되었습니다.", null));
     }
 
+    @Operation(summary = "보드 전체 조회")
     @GetMapping("/boards/")
     public ResponseEntity<CommonResponseDto> getBoards(
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -93,6 +99,7 @@ public class BoardController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "보드를 전제 조회 하였습니다.", responses));
     }
 
+    @Operation(summary = "보드 단일 조회")
     @GetMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> getBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long board_id) {
@@ -101,6 +108,7 @@ public class BoardController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "보드를 단일 조회 하였습니다.", response));
     }
 
+    @Operation(summary = "보드에 작업자 초대")
     @PostMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> inviteNewUser(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -111,7 +119,19 @@ public class BoardController {
                 .body(new CommonResponseDto(HttpStatus.OK.value(), "보드에 새로운 사용자를 초대하였습니다.", null));
     }
 
-    @Operation
+    @Operation(summary = "보드내 작업자 삭제")
+    @PatchMapping("/cards/{board_id}/workers")
+    public ResponseEntity<CommonResponseDto> deleteBoardWorker(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long board_id
+    ) {
+        boardService.deleteBoardWorker(userDetails.getUser(), board_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponseDto<>(HttpStatus.OK.value(), "작업자 삭제 성공", null)
+        );
+    }
+
+    @Operation(summary = "보드내 작업자 리스트 조회")
     @GetMapping("/boards/{board_id}/workers")
     public ResponseEntity<CommonResponseDto> getBoardsInBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -122,7 +142,7 @@ public class BoardController {
                 new CommonResponseDto(HttpStatus.OK.value(), "보드 작업자 리스트를 조회하였습니다.", response));
     }
 
-    @Operation
+    @Operation(summary = "보드내 작업자 단일 조회")
     @GetMapping("/boards/{board_id}/search/workers")
     public ResponseEntity<CommonResponseDto> searchWorkerInBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -134,6 +154,4 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "보드 작업자를 검색하였습니다.", response));
     }
-
-
 }
