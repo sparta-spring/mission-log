@@ -128,9 +128,10 @@ public class CardController {
     @PatchMapping("/cards/{card_id}/workers")
     public ResponseEntity<CommonResponseDto> deleteWorker(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long card_id
+            @PathVariable Long card_id,
+            @RequestParam String email
     ) {
-        cardService.deleteWorker(userDetails.getUser(), card_id);
+        cardService.deleteWorker(userDetails.getUser(), card_id, email);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new CommonResponseDto(HttpStatus.OK.value(), "작업자 삭제 성공", null)
         );
