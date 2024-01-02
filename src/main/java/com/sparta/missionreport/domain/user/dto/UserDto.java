@@ -105,7 +105,6 @@ public class UserDto {
         @Schema(description = "유저 이름", defaultValue = "스파르타")
         private String name;
 
-
         public static UserResponse of(User user) {
             return UserResponse.builder()
                     .email(user.getEmail())
