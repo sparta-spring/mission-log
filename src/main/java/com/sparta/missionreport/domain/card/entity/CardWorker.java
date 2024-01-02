@@ -29,7 +29,7 @@ public class CardWorker extends CommonEntity {
     private Card card;
 
     @Column
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     public String getUserEmail() {
         return this.user.getEmail();

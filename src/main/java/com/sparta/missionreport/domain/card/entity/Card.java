@@ -58,7 +58,7 @@ public class Card extends CommonEntity {
 
     @Column
     @Builder.Default
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
 
     @Column
