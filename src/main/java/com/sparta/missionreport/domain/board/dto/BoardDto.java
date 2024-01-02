@@ -88,7 +88,8 @@ public class BoardDto {
                     .description(board.getDescription())
                     .color(board.getColor().getColor())
                     .createdBy(board.getCreatedBy().getEmail())
-                    .boardWorkers(board.getBoardWorkerList().stream().map(BoardWorker::getUserEmail).toList())
+                    .boardWorkers(board.getBoardWorkerList().stream().map(BoardWorker::getUserEmail)
+                            .toList())
                     .createdAt(board.getCreatedAt())
                     .build();
         }
