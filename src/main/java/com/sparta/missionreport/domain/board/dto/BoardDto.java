@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class BoardDto {
 
     @Getter
+    @Builder
     public static class CreateBoardRequest {
 
         @NotBlank
@@ -27,6 +28,7 @@ public class BoardDto {
     }
 
     @Getter
+    @Builder
     public static class UpdateBoardRequest {
 
         private String name;
@@ -57,7 +59,8 @@ public class BoardDto {
                     .description(board.getDescription())
                     .color(board.getColor().getColor())
                     .createdBy(board.getCreatedBy().getEmail())
-                    .boardWorkers(board.getBoardWorkerList().stream().map(BoardWorker::getUserEmail).toList())
+                    .boardWorkers(board.getBoardWorkerList().stream().map(BoardWorker::getUserEmail)
+                            .toList())
                     .createdAt(board.getCreatedAt())
                     .build();
         }

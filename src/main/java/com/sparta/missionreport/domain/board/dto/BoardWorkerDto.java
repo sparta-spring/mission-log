@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class BoardWorkerDto {
 
     @Getter
+    @Builder
     @Schema(name = "보드 작업자 초대 요청 dto")
     public static class BoardWorkerInviteRequest {
 
