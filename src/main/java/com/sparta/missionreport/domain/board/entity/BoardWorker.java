@@ -29,7 +29,7 @@ public class BoardWorker extends CommonEntity {
 
     @Column
     @Builder.Default
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
