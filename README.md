@@ -5,44 +5,44 @@
 ###  🪖팀과제 기획관련
 - 필수 구현 기능
     - **사용자 관리 기능**
-        - [ ]  로그인 / 회원가입 기능
-        - [ ]  사용자 정보 수정 및 삭제 기능
+        - [x]  로그인 / 회원가입 기능
+        - [x]  사용자 정보 수정 및 삭제 기능
     - **보드 관리 기능**
-        - [ ]  보드 생성
-        - [ ]  보드 수정
+        - [x]  보드 생성
+        - [x]  보드 수정
             - 보드 이름
             - 배경 색상
             - 설명
-        - [ ]  보드 삭제
+        - [x]  보드 삭제
             - 생성한 사용자만 삭제를 할 수 있습니다.
-        - [ ]  보드 초대
+        - [x]  보드 초대
             - 특정 사용자들을 해당 보드에 초대시켜 협업을 할 수 있어야 합니다.
     - **컬럼 관리 기능**
-        - [ ]  컬럼 생성
+        - [x]  컬럼 생성
             - 보드 내부에 컬럼을 생성할 수 있어야 합니다.
             - 컬럼이란 위 사진에서 Backlog, In Progress와 같은 것을 의미해요.
-        - [ ]  컬럼 이름 수정
-        - [ ]  컬럼 삭제
-        - [ ]  컬럼 순서 이동
+        - [x]  컬럼 이름 수정
+        - [x]  컬럼 삭제
+        - [x]  컬럼 순서 이동
             - 컬럼 순서는 자유롭게 변경될 수 있어야 합니다.
                 - e.g. Backlog, In Progress, Done → Backlog, Done, In Progress
     - **카드 관리 기능**
-        - [ ]  카드 생성
+        - [x]  카드 생성
             - 컬럼 내부에 카드를 생성할 수 있어야 합니다.
-        - [ ]  카드 수정
+        - [x]  카드 수정
             - 카드 이름
             - 카드 설명
             - 카드 색상
             - 작업자 할당
             - 작업자 변경
-        - [ ]  카드 삭제
-        - [ ]  카드 이동
+        - [x]  카드 삭제
+        - [x]  카드 이동
             - 같은 컬럼 내에서 카드의 위치를 변경할 수 있어야 합니다.
             - 카드를 다른 컬럼으로 이동할 수 있어야 합니다.
     - **카드 상세 기능**
-        - [ ]  댓글 달기
-            - 협업하는 사람들끼리 카드에 대한 토론이 이루어질 수 있어야 합니다.
-        - [ ]  날짜 지정
+        - [x]  댓글 달기
+          - 협업하는 사람들끼리 카드에 대한 토론이 이루어질 수 있어야 합니다.
+        - [x]  날짜 지정
             - 카드에 마감일을 설정하고 관리할 수 있어야 합니다.
 
 ##  🪖Demo Video
@@ -59,9 +59,10 @@
 | Name | Role                                |
 |------|-------------------------------------|
 | [이지선](https://github.com/jiisuniui) | User API, CheckList API |
-| [김종규](https://github.com/Kim-Jong-Gyu) | Column API, Store API, Menu API         |
-| [김대영](https://github.com/kdy9960) | Board API                          |
-| [김혜](https://github.com/wonowonow) | Card API, Comment API      |
+| [김종규](https://github.com/Kim-Jong-Gyu) | Column API |
+| [김대영](https://github.com/kdy9960) | Board API |
+| [김혜윤](https://hyeyun.tistory.com/) | Card API, Comment API |
+
 
 ## 🪖 Commit Convention
 | Tag Name | Description |
@@ -254,40 +255,42 @@ mission-log/
 - 빠른 데이터 접근
 - Stateful하나 Stateless적인 속도를 위해 사용
 
+### 3. Swagger UI 사용
+- API를 쉽게 테스트 하기 위해 사용
+- API 호출 시 전달해야 하는 파라미터 확인 가능
+
+### 4. 이메일 인증
+- 회원가입 인증을 위한 이메일 인증 사용
+
+
 
 ## 🪖 Trouble Shooting
+### 1. User Entity 생성 시, createdAt, modifiedAt `(CommonEntity)` 값이 생성 되지 않는 문제
+- `User.build()` 된 값을 DB에 저장 하고, 저장되기 이전의 User 객체를 가져옴으로써 발생한 문제
+- @CreatedDate, @ModifiedDate 는 엔티티 생성 시점이 아니라, DB에 저장될 때,(영속 상태가 될때, flush() ) 될 때 값이 설정된다.
+    
+### 2. CustomException class 
+- problem
+  - 각 도메인 별로 에러 코드(enum)을 분리하여 구현함으로서 CustomException 클래스 생성시 코드 부분이 복잡해는 문제 발생
+- solution
+  - CustomException을 각 도메인 별로 구현하고, 전체 GlobalCustomException을 구현하여 상속함으로써 throw-catch 시 깔끔하게 처리할 수 있도록 함
 
-- build 할때 common entity 값 save 전에 안들어감
+### 3. response 반환 시, CommonResponseDto 값 이 null로 반환되는 문제
+- data 부분에 담는 dto에 getter를 안 넣어서 private column 들이 반환되지 않았기에, @Getter 를 추가해줌으로써 해결
     
-    → @CreatedDate, @ModifiedDate는 엔티티 생성 시점이 아니라, DB에 저장될 때,(영속 상태가 될때, flush() ) 될 때 값이 설정된다.
+### 4. Git pull origin {branch} 시
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fy68S2%2FbtsBynxWIBy%2FnRRQk6oopDdCEBXTuUdT4K%2Fimg.png)
+- solution
+  1. 로컬 develop 브랜치에서 머지된 코드를 pull
+  2. 작업 중이 브랜치에서 stash 하여 작업하던 내용 저장
+  3. git merge develop으로 merge!
+  4. git stash apply 로 저장해놓은 코드 가져오기
     
-- Exception
-    - problem
-        - 각 도메인 별로 에러 코드(enum)을 분리하여 구현함으로서 CustomException 클래스 생성시 코드 부분이 복잡해짐
-    - solution
-        - CustomException을 각 도메인 별로 구현하고, 전체 GlobalCustomException을 구현하여 상속함으로써 throw-catch 시 깔끔하게 처리할 수 있도록 함
-- CommonResponseDto
-    
-    data 부분에 담는 dto에 getter를 안 넣어서 private column들이 안읽혔음
-    
-- 혜윤님 trouble shooting 쓰세요….ㅠ….. git….
-    
-    https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fy68S2%2FbtsBynxWIBy%2FnRRQk6oopDdCEBXTuUdT4K%2Fimg.png
-    
-    1. 로컬 develop 브랜치에서 머지된 코드를 pull
-    2. 작업 중이 브랜치에서 stash 하여 작업하던 내용 저장
-    3. git merge develop으로 merge!
-    4. git stash apply 로 저장해놓은 코드 가져오기
-
-    
-    완료
-    
-- swagger ui
-    
-    swagger를 연결한 checklist dto가 swagger 에서 card dto로 표시되는 문제 발생
-    
-    defaultValue→ example로 수정하는등 여러 시도
-    
-    dto를 큰 클래스에서 내부 클래스로 resquest와 response를 구현했는데, 내부 클래스의 이름이 같아서 생긴 문제
-    
-    기존에 먼저 구현된  card만 인식되었던 것
+### 5. swagger ui
+- Problem
+    - swagger를 연결한 checklist dto가 swagger 에서 card dto로 표시되는 문제 발생
+- Action  
+  - defaultValue→ example로 수정하는등 여러 시도
+- Cause
+  - dto를 큰 클래스에서 내부 클래스로 resquest와 response를 구현했는데, 내부 클래스의 이름이 같아서 생긴 문제 
+  - 기존에 먼저 구현된  card만 인식되었던 것
