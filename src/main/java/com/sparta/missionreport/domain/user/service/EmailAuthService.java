@@ -17,7 +17,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 @RequiredArgsConstructor
 public class EmailAuthService {
 
-    private final UserService userService;
     private final RedisService redisService;
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;  // 타임리프
