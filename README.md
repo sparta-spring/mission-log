@@ -255,6 +255,14 @@ mission-log/
 - 빠른 데이터 접근
 - Stateful하나 Stateless적인 속도를 위해 사용
 
+### 3. Swagger UI 사용
+- API를 쉽게 테스트 하기 위해 사용
+- API 호출 시 전달해야 하는 파라미터 확인 가능
+
+### 4. 이메일 인증
+- 회원가입 인증을 위한 이메일 인증 사용
+
+
 
 ## 🪖 Trouble Shooting
 ### 1. User Entity 생성 시, createdAt, modifiedAt `(CommonEntity)` 값이 생성 되지 않는 문제
